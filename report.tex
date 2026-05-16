@@ -1,6 +1,6 @@
 \documentclass[12pt,a4paper]{article}
 
-\usepackage[a4paper, top=1in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage[a4paper, top=1in, bottom=1in, left=0.7in, right=0.7in]{geometry}
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{xcolor}
@@ -254,6 +254,47 @@ sudo airodump-ng -c 6 --bssid XX:XX:XX:XX:XX:XX -w capture wlp2s0mon
     \item \texttt{--bssid} — specifies the target MAC address
     \item \texttt{-w} — writes captured packets to a file
 \end{itemize}
+
+\subsubsection{Targeted Capture Session Results}
+
+The capture session ran from \textbf{12:56:33} to \textbf{12:57:12} (approximately 39 seconds). The following access point and client data were recorded:
+
+\vspace{4pt}
+\begin{tabularx}{\textwidth}{>{\bfseries\footnotesize}X >{\footnotesize}l >{\centering\arraybackslash\footnotesize}p{0.6cm} >{\footnotesize}l >{\centering\arraybackslash\footnotesize}p{1.5cm} >{\centering\arraybackslash\footnotesize}p{1.4cm} >{\centering\arraybackslash\footnotesize}p{1.2cm}}
+\arrayrulecolor{accent!40}
+\toprule
+\rowcolor{tableheadbg}
+\textcolor{white}{\textbf{SSID}} &
+\textcolor{white}{\textbf{BSSID}} &
+\textcolor{white}{\textbf{Ch.}} &
+\textcolor{white}{\textbf{Encryption}} &
+\textcolor{white}{\textbf{Signal}} &
+\textcolor{white}{\textbf{Beacons}} &
+\textcolor{white}{\textbf{Data}} \\
+\midrule
+Thavanathan's iPhone & A6:8E:DC:82:EB:7B & 6 & WPA2 (CCMP/PSK) & $-78$ dBm & 322 & 1407 \\
+\bottomrule
+\end{tabularx}
+\vspace{4pt}
+
+Two client devices were observed associated with this access point:
+
+\vspace{4pt}
+\begin{tabularx}{\textwidth}{>{\footnotesize}l >{\centering\arraybackslash\footnotesize}p{1.5cm} >{\centering\arraybackslash\footnotesize}p{1.4cm} >{\footnotesize}X}
+\arrayrulecolor{accent!40}
+\toprule
+\rowcolor{tableheadbg}
+\textcolor{white}{\textbf{Client MAC}} &
+\textcolor{white}{\textbf{Signal}} &
+\textcolor{white}{\textbf{Packets}} &
+\textcolor{white}{\textbf{Note}} \\
+\midrule
+24:EB:16:56:E1:CC & $-76$ dBm & 3124 & Directed deauth target (succeeded) \\
+\rowcolor{tablerowalt}
+14:5A:FC:81:7E:1D & $-37$ dBm & 1134 & First deauth attempt (channel mismatch) \\
+\bottomrule
+\end{tabularx}
+\vspace{4pt}
 
 \subsection{Performing a Deauthentication Attack}
 
