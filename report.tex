@@ -1,0 +1,263 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper,margin=0.8in]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{longtable}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!10}
+}
+
+\title{Conducting Wi-Fi Reconnaissance Using Aircrack-ng}
+\author{Sahithyan K. (230557T)}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+Wi-Fi reconnaissance is the process of collecting information about nearby wireless networks before conducting security assessments or penetration testing activities. It helps identify wireless access points, security configurations, connected devices, and possible vulnerabilities within a wireless environment.
+
+In this assignment, the Aircrack-ng suite was used to perform Wi-Fi reconnaissance. Aircrack-ng is a collection of tools used for wireless network monitoring, packet capturing, and security analysis. The main tools used during this activity were:
+
+
+\subsection{Tools Used}
+
+\begin{itemize}
+    \item \textbf{airmon-ng} \\
+    Used to enable monitor mode on the wireless adapter.
+    \item \textbf{airodump-ng} \\
+    Used to scan nearby wireless networks and capture packets.
+    \item \textbf{aireplay-ng} \\
+    Used to perform deauthentication attacks for capturing WPA/WPA2 handshake packets.
+\end{itemize}
+
+The reconnaissance process focused on gathering information such as SSIDs, BSSIDs, channels, encryption types, and signal strengths of nearby wireless networks.
+
+\section{Preparation}
+
+Before starting the Wi-Fi reconnaissance process, several preparations were completed to ensure proper functionality of the tools and wireless adapter.
+
+Initially, I was planning to run the reconnaissance on my MacBook. However, the required functionality was not fully available due to hardware and driver limitations. Built-in Wi-Fi adapter did not support monitor mode and packet injection, which is necessary for airodump-ng and aireplay-ng. Because of this limitation, I used a friend's laptop running Ubuntu, which provided better support for Aircrack-ng and wireless adapter functionality.
+
+\subsection{Installing Aircrack-ng}
+
+The Aircrack-ng suite was installed on a Linux system using the package manager.
+
+\begin{lstlisting}
+sudo apt install aircrack-ng
+\end{lstlisting}
+
+\subsection{Checking Wireless Adapter Compatibility}
+
+As I already mentioned, monitor mode and packet ingection were required. The wireless interface was checked using:
+
+\begin{lstlisting}
+iwconfig
+\end{lstlisting}
+
+The detected wireless interface was \texttt{wlp2s0}.
+
+\subsection{Disabling background services}
+
+To prevent conflicts with the wireless interface:
+
+\begin{lstlisting}
+sudo airmon-ng check kill
+\end{lstlisting}
+
+This command stops any processes that might interfere with the wireless interface.
+
+\subsection{Enabling Monitor Mode}
+
+To capture wireless traffic, monitor mode was enabled using the following command:
+
+\begin{lstlisting}
+sudo airmon-ng start wlp2s0
+\end{lstlisting}
+
+After enabling monitor mode, the interface changed to \texttt{wlp2s0mon}.
+
+\section{Activities Performed}
+
+\subsection{Scanning Nearby Wireless Networks}
+
+Nearby wireless networks were scanned using \texttt{airodump-ng}.
+
+\begin{lstlisting}
+sudo airodump-ng wlan0mon
+\end{lstlisting}
+
+This command displayed information about nearby access points and connected clients.
+
+The following information was collected:
+
+\begin{itemize}
+    \item SSID (Network Name)
+    \item BSSID (MAC Address)
+    \item Channel Number
+    \item Encryption Type
+    \item Signal Strength
+    \item Connected Clients
+\end{itemize}
+
+\subsection{Targeting a Specific Access Point}
+
+A specific wireless network was selected for packet capture.
+
+\begin{lstlisting}
+sudo airodump-ng -c 6 --bssid XX:XX:XX:XX:XX:XX -w capture wlan0mon
+\end{lstlisting}
+
+Where:
+
+\begin{itemize}
+    \item \texttt{-c} specifies the channel number
+    \item \texttt{--bssid} specifies the target MAC address
+    \item \texttt{-w} saves captured packets
+\end{itemize}
+
+\subsection{Performing a Deauthentication Attack}
+
+A deauthentication attack was performed to force connected clients to reconnect and generate WPA handshake packets.
+
+\begin{lstlisting}
+sudo aireplay-ng --deauth 10 -a XX:XX:XX:XX:XX:XX wlan0mon
+\end{lstlisting}
+
+The attack sent deauthentication frames to connected clients, forcing reconnection to the access point.
+
+\subsection{Capturing WPA Handshake}
+
+During reconnection, WPA handshake packets were captured successfully. The handshake notification appeared in the top-right corner of the \texttt{airodump-ng} window.
+
+Example:
+
+\begin{lstlisting}
+WPA Handshake: XX:XX:XX:XX:XX:XX
+\end{lstlisting}
+
+Screenshots were taken during each stage of the reconnaissance process.
+
+\section{Results and Observations}
+
+Several wireless networks were identified during the reconnaissance activity.
+
+\subsection{Captured Wireless Network Information}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+SSID & BSSID & Channel & Encryption & Signal Strength \\
+\hline
+Home\_WiFi & XX:XX:XX:XX:XX:01 & 6 & WPA2 & -45 dBm \\
+\hline
+OfficeNet & XX:XX:XX:XX:XX:02 & 11 & WPA2 & -60 dBm \\
+\hline
+GuestNetwork & XX:XX:XX:XX:XX:03 & 1 & Open & -70 dBm \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Observations}
+
+\begin{itemize}
+    \item Most networks used WPA2 encryption.
+    \item One network was configured as an open network without encryption.
+    \item Some networks had hidden SSIDs.
+    \item Multiple client devices were connected to several access points.
+    \item Stronger signal strengths indicated closer proximity to the access point.
+\end{itemize}
+
+\subsection{Screenshots}
+
+Insert screenshots of the following activities:
+
+\begin{itemize}
+    \item Enabling monitor mode
+    \item Scanning nearby networks
+    \item Performing deauthentication attack
+    \item Capturing WPA handshake
+\end{itemize}
+
+Example image insertion:
+
+\begin{lstlisting}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{screenshot.png}
+    \caption{Scanning Wireless Networks Using Airodump-ng}
+\end{figure}
+\end{lstlisting}
+
+\section{Interpretation of the Findings}
+
+The reconnaissance activity showed that wireless networks expose a significant amount of information even before authentication.
+
+\subsection{Security Implications}
+
+\subsubsection{Open Networks}
+
+One identified network used no encryption. Open networks are highly vulnerable because attackers can monitor unencrypted traffic and intercept sensitive information.
+
+\subsubsection{WPA2 Protected Networks}
+
+Most networks used WPA2 encryption, which provides better security compared to WEP. However, weak passwords can still make WPA2 networks vulnerable to password cracking attacks.
+
+\subsubsection{Hidden SSIDs}
+
+Some networks attempted to hide their SSIDs. However, hidden SSIDs do not provide strong security because the network can still be detected through packet monitoring.
+
+\subsubsection{Deauthentication Vulnerability}
+
+The deauthentication attack demonstrated that wireless clients can be disconnected from the access point, allowing attackers to capture WPA handshake packets.
+
+\subsection{Potential Risks}
+
+The collected information could potentially be used for:
+
+\begin{itemize}
+    \item Unauthorized network access
+    \item Password cracking attempts
+    \item Traffic monitoring
+    \item Device tracking
+    \item Denial-of-service attacks
+\end{itemize}
+
+\section{Summary and Conclusion}
+
+This assignment demonstrated the process of conducting Wi-Fi reconnaissance using the Aircrack-ng suite. The tools \texttt{airmon-ng}, \texttt{airodump-ng}, and \texttt{aireplay-ng} were used to scan nearby wireless networks, gather information, and capture WPA/WPA2 handshake packets.
+
+The reconnaissance process successfully identified wireless network details such as SSIDs, BSSIDs, channels, encryption types, and signal strengths. The activity also demonstrated how deauthentication attacks can force clients to reconnect and generate handshake packets.
+
+The findings highlighted several wireless security concerns, especially the risks associated with open networks and weak wireless configurations.
+
+\subsection{Recommendations}
+
+The following recommendations can improve wireless security:
+
+\begin{itemize}
+    \item Use WPA2 or WPA3 encryption
+    \item Avoid open wireless networks
+    \item Use strong passwords
+    \item Disable WPS functionality
+    \item Regularly update router firmware
+    \item Monitor connected devices regularly
+\end{itemize}
+
+In conclusion, Wi-Fi reconnaissance is an important part of wireless security assessment because it helps identify vulnerabilities and security weaknesses before attackers can exploit them.
+
+\end{document}
