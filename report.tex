@@ -220,9 +220,9 @@ sudo airmon-ng start wlp2s0
 After enabling monitor mode, the interface was renamed to \texttt{wlp2s0mon}.
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Activities Performed}
+\section{Activities, Results, and Interpretation}
 
-\subsection{Scanning Nearby Wireless Networks}
+\subsection{Passive Network Scanning}
 
 Nearby wireless networks were scanned using \texttt{airodump-ng}:
 
@@ -230,18 +230,58 @@ Nearby wireless networks were scanned using \texttt{airodump-ng}:
 sudo airodump-ng wlp2s0mon
 \end{lstlisting}
 
-This command displayed information about nearby access points and connected clients, including:
+This command displayed information about nearby access points and connected clients, including SSID, BSSID, channel, encryption type, signal strength, and associated clients. Six scanning sessions were conducted on 2026-05-16 between 12:27 and 12:54, totalling approximately 27 minutes of passive capture. A total of \textbf{39 unique access points} were detected.
+
+A representative selection of the detected networks is shown below, ordered by signal strength:
+
+\vspace{4pt}
+\begin{tabularx}{\textwidth}{>{\bfseries\footnotesize}X >{\footnotesize}l >{\centering\arraybackslash\footnotesize}p{0.6cm} >{\footnotesize}l >{\centering\arraybackslash\footnotesize}p{1.5cm}}
+\arrayrulecolor{accent!40}
+\toprule
+\rowcolor{tableheadbg}
+\textcolor{white}{\textbf{SSID}} &
+\textcolor{white}{\textbf{BSSID}} &
+\textcolor{white}{\textbf{Ch.}} &
+\textcolor{white}{\textbf{Encryption}} &
+\textcolor{white}{\textbf{Signal}} \\
+\midrule
+Thavanathan's iPhone  & A6:8E:DC:82:EB:7B & 6  & WPA2          & $-47$ dBm \\
+\rowcolor{tablerowalt}
+Galaxy M0298c8        & 22:7C:A4:7D:D9:64 & 6  & WPA2 / Open   & $-64$ dBm \\
+Boss                  & 9E:02:9F:A9:99:85 & 1  & WPA2          & $-66$ dBm \\
+\rowcolor{tablerowalt}
+Redmi A1+             & BA:3D:EB:6D:12:5C & 6  & Open          & $-71$ dBm \\
+Dialog 4G             & 7C:11:CB:07:F3:03 & 6  & WPA2          & $-76$ dBm \\
+\rowcolor{tablerowalt}
+Dialog 4G 777         & 98:A9:42:17:FE:C1 & 7  & WPA2          & $-77$ dBm \\
+Dialog 4G 379         & D8:42:F7:E2:21:7B & 10 & WPA2          & $-79$ dBm \\
+\rowcolor{tablerowalt}
+Redmi A5              & 4E:A8:A8:1D:FA:AF & 1  & WPA3 / WPA2   & $-84$ dBm \\
+EZVIZ\_BA8983061      & BA:4D:43:17:49:3D & 3  & WPA2 / WPA    & $-85$ dBm \\
+\rowcolor{tablerowalt}
+SLT-4G-EAFC           & 0C:8F:FF:28:14:7C & 6  & WPA2 / WPA    & $-91$ dBm \\
+\bottomrule
+\end{tabularx}
+\vspace{4pt}
+
+\textbf{Observations:}
 
 \begin{itemize}
-    \item SSID (Network Name)
-    \item BSSID (MAC Address)
-    \item Channel Number
-    \item Encryption Type
-    \item Signal Strength
-    \item Connected Clients
+    \item \textbf{32 networks} used WPA2 encryption; \textbf{1 network} (Redmi A5) used WPA3.
+    \item \textbf{4 networks} were fully open (no encryption), including the ``Redmi A1+'' hotspot.
+    \item \textbf{7 networks} broadcast with a hidden SSID (empty ESSID field).
+    \item Several networks advertised both WPA2 and the older WPA standard simultaneously, indicating mixed-mode or legacy configurations.
+    \item Multiple mobile hotspots were visible, including devices named ``Thavanathan's iPhone'', ``Galaxy M0298c8'', and ``TimBaTTuK's S25 Ultra''.
+    \item IoT and surveillance devices were identifiable by their SSIDs: EZVIZ\_ (security camera), DDPAI\_ and 70mai\_ (dash cameras), and three WIFIBRG\_ bridge units.
+    \item Vehicle-mounted access points were present: ``Vezel-Dash-Cam'' and ``In\_Vehicle\_Wifi''.
+    \item Up to 3 associated client devices were observed around a single access point during capture, making client tracking possible.
 \end{itemize}
 
-\subsection{Targeting a Specific Access Point}
+\textbf{Interpretation:}
+
+The scan results illustrate how much a passive observer can learn without authenticating to any network. Four open networks expose all transmitted traffic in plaintext, leaving users vulnerable to credential theft and session hijacking. The 32 WPA2 networks provide reasonable protection with strong passphrases, but several ISP and IoT devices broadcast mixed WPA/WPA2 configurations, which reintroduce the weaker TKIP cipher and can be exploited. Only one network used WPA3, underscoring its slow real-world adoption. The seven hidden SSIDs offer no practical security benefit: access points still broadcast beacon frames and were captured trivially by \texttt{airodump-ng}. IoT devices (cameras, dash cameras, bridge units) advertise distinctive SSIDs and typically run outdated firmware, making them attractive entry points for network intrusion.
+
+\subsection{Targeted Packet Capture}
 
 A specific wireless network was selected for deeper packet capture:
 
@@ -254,8 +294,6 @@ sudo airodump-ng -c 6 --bssid XX:XX:XX:XX:XX:XX -w capture wlp2s0mon
     \item \texttt{--bssid} — specifies the target MAC address
     \item \texttt{-w} — writes captured packets to a file
 \end{itemize}
-
-\subsubsection{Targeted Capture Session Results}
 
 The capture session ran from \textbf{12:56:33} to \textbf{12:57:12} (approximately 39 seconds). The following access point and client data were recorded:
 
@@ -296,7 +334,11 @@ Two client devices were observed associated with this access point:
 \end{tabularx}
 \vspace{4pt}
 
-\subsection{Performing a Deauthentication Attack}
+\textbf{Interpretation:}
+
+Locking \texttt{airodump-ng} to a single channel and BSSID concentrates all captured frames on one target, enabling reliable client enumeration and packet accumulation within a very short window. The 1,407 data frames captured in under 40 seconds show that even brief targeted sessions yield enough material for further analysis.
+
+\subsection{Deauthentication Attack}
 
 A deauthentication attack was performed against an isolated private Wi-Fi access point (a personal mobile hotspot) to force connected clients to reconnect and generate WPA handshake packets. The target was selected because it was under personal control and no third-party devices were affected.
 
@@ -338,132 +380,21 @@ sudo aireplay-ng -1 0 -a A6:8E:DC:82:EB:7B -c 24:EB:16:56:E1:CC wlp2s0mon
 
 The open-system authentication succeeded, but the subsequent association request was denied with status code 12 (\emph{wrong ESSID or WPA}), confirming that WPA2 protection was enforced and association without valid credentials was not possible.
 
-\subsection{Capturing the WPA Handshake}
+\textbf{Interpretation:}
 
-During reconnection, WPA handshake packets were captured successfully. The handshake notification appeared in the top-right corner of the \texttt{airodump-ng} window:
+The attack demonstrated a fundamental weakness in the 802.11 protocol: management frames such as deauthentication are unauthenticated by design, so any station can forge and send them without possessing network credentials. The high ACK rates (63 out of 67) confirm that the frames were received and acted upon by the client. WPA3 networks with Management Frame Protection (MFP) are not vulnerable to this attack because their management frames are cryptographically signed; the absence of WPA3 across nearly all detected networks means this technique would work against the vast majority of access points observed.
+
+\subsection{WPA Handshake Capture}
+
+During reconnection triggered by the deauthentication attack, WPA handshake packets were captured successfully. The handshake notification appeared in the top-right corner of the \texttt{airodump-ng} window:
 
 \begin{lstlisting}
 WPA Handshake: XX:XX:XX:XX:XX:XX
 \end{lstlisting}
 
-Screenshots were taken during each stage of the reconnaissance process.
+\textbf{Interpretation:}
 
-% ─────────────────────────────────────────────────────────────────────────────
-\section{Results and Observations}
-
-Six scanning sessions were conducted on 2026-05-16 between 12:27 and 12:54, totalling approximately 27 minutes of passive capture. A total of \textbf{39 unique access points} were detected across all sessions.
-
-\subsection{Captured Wireless Network Information}
-
-A representative selection of the detected networks is shown below, ordered by signal strength.
-
-\vspace{4pt}
-\begin{tabularx}{\textwidth}{>{\bfseries\footnotesize}X >{\footnotesize}l >{\centering\arraybackslash\footnotesize}p{0.6cm} >{\footnotesize}l >{\centering\arraybackslash\footnotesize}p{1.5cm}}
-\arrayrulecolor{accent!40}
-\toprule
-\rowcolor{tableheadbg}
-\textcolor{white}{\textbf{SSID}} &
-\textcolor{white}{\textbf{BSSID}} &
-\textcolor{white}{\textbf{Ch.}} &
-\textcolor{white}{\textbf{Encryption}} &
-\textcolor{white}{\textbf{Signal}} \\
-\midrule
-Thavanathan's iPhone  & A6:8E:DC:82:EB:7B & 6  & WPA2          & $-47$ dBm \\
-\rowcolor{tablerowalt}
-Galaxy M0298c8        & 22:7C:A4:7D:D9:64 & 6  & WPA2 / Open   & $-64$ dBm \\
-Boss                  & 9E:02:9F:A9:99:85 & 1  & WPA2          & $-66$ dBm \\
-\rowcolor{tablerowalt}
-Redmi A1+             & BA:3D:EB:6D:12:5C & 6  & Open          & $-71$ dBm \\
-Dialog 4G             & 7C:11:CB:07:F3:03 & 6  & WPA2          & $-76$ dBm \\
-\rowcolor{tablerowalt}
-Dialog 4G 777         & 98:A9:42:17:FE:C1 & 7  & WPA2          & $-77$ dBm \\
-Dialog 4G 379         & D8:42:F7:E2:21:7B & 10 & WPA2          & $-79$ dBm \\
-\rowcolor{tablerowalt}
-Redmi A5              & 4E:A8:A8:1D:FA:AF & 1  & WPA3 / WPA2   & $-84$ dBm \\
-EZVIZ\_BA8983061      & BA:4D:43:17:49:3D & 3  & WPA2 / WPA    & $-85$ dBm \\
-\rowcolor{tablerowalt}
-SLT-4G-EAFC           & 0C:8F:FF:28:14:7C & 6  & WPA2 / WPA    & $-91$ dBm \\
-\bottomrule
-\end{tabularx}
-\vspace{4pt}
-
-\subsection{Observations}
-
-\begin{itemize}
-    \item \textbf{39 unique access points} were detected across 6 scanning sessions.
-    \item \textbf{32 networks} used WPA2 encryption; \textbf{1 network} (Redmi A5) used WPA3.
-    \item \textbf{4 networks} were fully open (no encryption), including the ``Redmi A1+'' hotspot.
-    \item \textbf{7 networks} broadcast with a hidden SSID (empty ESSID field).
-    \item Several networks advertised both WPA2 and the older WPA standard simultaneously, indicating mixed-mode or legacy configurations.
-    \item Multiple mobile hotspots were visible, including devices named ``Thavanathan's iPhone'', ``Galaxy M0298c8'', and ``TimBaTTuK's S25 Ultra''.
-    \item IoT and surveillance devices were identifiable by their SSIDs: EZVIZ\_ (security camera), DDPAI\_ and 70mai\_ (dash cameras), and three WIFIBRG\_ bridge units.
-    \item Vehicle-mounted access points were present: ``Vezel-Dash-Cam'' and ``In\_Vehicle\_Wifi''.
-    \item Up to 3 associated client devices were observed around a single access point during capture, making client tracking possible.
-\end{itemize}
-
-\subsection{Screenshots}
-
-Insert screenshots of the following activities:
-
-\begin{itemize}
-    \item Enabling monitor mode
-    \item Scanning nearby networks
-    \item Performing deauthentication attack
-    \item Capturing WPA handshake
-\end{itemize}
-
-Example image insertion:
-
-\begin{lstlisting}
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.8\textwidth]{screenshot.png}
-    \caption{Scanning Wireless Networks Using Airodump-ng}
-\end{figure}
-\end{lstlisting}
-
-% ─────────────────────────────────────────────────────────────────────────────
-\section{Interpretation of the Findings}
-
-The reconnaissance activity showed that wireless networks expose a significant amount of information even before authentication.
-
-\subsection{Security Implications}
-
-\subsubsection{Open Networks}
-
-Four networks were detected without any encryption, including the ``Redmi A1+'' hotspot. Open networks allow any nearby observer to capture and read all transmitted data in plaintext. In a public or semi-public setting, this exposes users to credential theft, session hijacking, and traffic interception.
-
-\subsubsection{WPA2 Protected Networks}
-
-The majority of detected networks (32 out of 39) used WPA2, which provides adequate protection when paired with a strong passphrase. However, several mixed-mode configurations (advertising both WPA2 and the older WPA standard simultaneously) were observed, including networks from ISPs (``Dialog 4G'', ``SLT-4G-EAFC'') and IoT devices. Mixed-mode operation introduces older, weaker TKIP cipher support, which can be exploited.
-
-\subsubsection{WPA3 Adoption}
-
-Only one network (``Redmi A5'') advertised WPA3, the current state-of-the-art standard offering stronger authentication through Simultaneous Authentication of Equals (SAE). The near-absence of WPA3 across all detected networks highlights slow adoption in practice.
-
-\subsubsection{Hidden SSIDs}
-
-Seven networks were detected with an empty SSID field. Although hiding an SSID prevents casual discovery, the network is still visible through passive monitoring since access points continue to broadcast beacon frames. Airodump-ng captured these networks trivially.
-
-\subsubsection{IoT and Embedded Devices}
-
-Several IoT devices were identifiable by their SSIDs (EZVIZ security cameras, DDPAI and 70mai dash cameras, WIFIBRG bridge units). These devices often run outdated firmware and default configurations, making them attractive targets for network intrusion.
-
-\subsubsection{Deauthentication Vulnerability}
-
-The deauthentication attack demonstrated that wireless clients can be disconnected from their access point at will, as 802.11 management frames are unauthenticated by design. This forced reconnection can be used to capture WPA handshake packets for offline cracking.
-
-\subsection{Potential Risks}
-
-The collected information could potentially be used for:
-
-\begin{itemize}
-    \item Unauthorized network access
-    \item Password cracking attempts
-    \item Traffic monitoring
-    \item Device tracking
-    \item Denial-of-service attacks
-\end{itemize}
+Capturing the four-way WPA handshake is the prerequisite for offline passphrase cracking. Once the handshake is stored in a capture file, an attacker can attempt dictionary or brute-force attacks against it using tools such as \texttt{aircrack-ng} or \texttt{hashcat} without any further interaction with the target network. The risk to the network owner is therefore not limited to the moment of capture — a weak passphrase can be recovered long after the event. The collected information could potentially be used for unauthorised network access, password cracking, traffic monitoring, device tracking, and denial-of-service attacks.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Summary and Conclusion}
