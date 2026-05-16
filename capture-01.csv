@@ -1,0 +1,8 @@
+
+BSSID, First time seen, Last time seen, channel, Speed, Privacy, Cipher, Authentication, Power, # beacons, # IV, LAN IP, ID-length, ESSID, Key
+A6:8E:DC:82:EB:7B, 2026-05-16 12:56:33, 2026-05-16 12:57:12,  6, 130, WPA2, CCMP, PSK, -78,      322,     1407,   0.  0.  0.  0,  22, Thavanathan’s iPhone, 
+
+Station MAC, First time seen, Last time seen, Power, # packets, BSSID, Probed ESSIDs
+24:EB:16:56:E1:CC, 2026-05-16 12:56:33, 2026-05-16 12:57:12, -76,     3124, A6:8E:DC:82:EB:7B,
+14:5A:FC:81:7E:1D, 2026-05-16 12:56:33, 2026-05-16 12:57:12, -37,     1134, A6:8E:DC:82:EB:7B,
+

