@@ -193,6 +193,23 @@ To prevent conflicts with the wireless interface, potentially interfering proces
 sudo airmon-ng check kill
 \end{lstlisting}
 
+The following processes were identified and killed:
+
+\begin{center}
+\begin{tabular}{r l}
+\arrayrulecolor{accent!40}
+\toprule
+\rowcolor{tableheadbg}
+\textcolor{white}{\textbf{PID}} & \textcolor{white}{\textbf{Name}} \\
+\midrule
+1236    & wpa\_supplicant \\
+\rowcolor{tablerowalt}
+1323558 & avahi-daemon \\
+1323562 & avahi-daemon \\
+\bottomrule
+\end{tabular}
+\end{center}
+
 \subsection{Enabling Monitor Mode}
 
 To capture wireless traffic, monitor mode was enabled:

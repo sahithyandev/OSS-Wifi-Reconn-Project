@@ -1,8 +1,4 @@
 -rakeshan@Hellboy:~$ iwconfig
-lo        no wireless extensions.
-
-enp3s0    no wireless extensions.
-
 wlp2s0    IEEE 802.11  ESSID:"Sahithyan"  
           Mode:Managed  Frequency:5.18 GHz  Access Point: 92:4D:5D:A6:EE:7D   
           Bit Rate=780 Mb/s   Tx-Power=20 dBm   
@@ -12,26 +8,6 @@ wlp2s0    IEEE 802.11  ESSID:"Sahithyan"
           Rx invalid nwid:0  Rx invalid crypt:0  Rx invalid frag:0
           Tx excessive retries:0  Invalid misc:89   Missed beacon:0
 
-docker0   no wireless extensions.
-
-br-d93556ea2279  no wireless extensions.
-
-br-22e74d9f1de7  no wireless extensions.
-
-br-e070edbe215a  no wireless extensions.
-
-br-47091fa56a0d  no wireless extensions.
-
-k-rakeshan@Hellboy:~$ ^C
-k-rakeshan@Hellboy:~$ sudo airmon-ng check kill
-[sudo] password for k-rakeshan: 
-
-Killing these processes:
-
-    PID Name
-   1236 wpa_supplicant
-1323558 avahi-daemon
-1323562 avahi-daemon
 
 k-rakeshan@Hellboy:~$ sudo airmon-ng start wlp2s0
 
