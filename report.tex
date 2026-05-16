@@ -1,57 +1,171 @@
 \documentclass[12pt,a4paper]{article}
 
-\usepackage[a4paper,margin=0.8in]{geometry}
+\usepackage[a4paper, top=1in, bottom=1in, left=1in, right=1in]{geometry}
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{fancyhdr}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{mdframed}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{colortbl}
 
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+% ── Colour palette ──────────────────────────────────────────────────────────
+\definecolor{accent}{RGB}{30, 100, 200}        % deep blue
+\definecolor{accentlight}{RGB}{220, 232, 252}  % pale blue tint
+\definecolor{codebg}{RGB}{245, 247, 250}       % near-white slate
+\definecolor{codefg}{RGB}{30, 40, 60}          % dark navy for code text
+\definecolor{keyword}{RGB}{180, 30, 80}        % crimson for keywords
+\definecolor{comment}{RGB}{100, 120, 140}      % muted blue-grey
+\definecolor{tableheadbg}{RGB}{30, 100, 200}
+\definecolor{tablerowalt}{RGB}{240, 245, 255}
+\definecolor{sectionrule}{RGB}{30, 100, 200}
+\definecolor{textgrey}{RGB}{80, 90, 100}
 
-\lstset{
-    basicstyle=\ttfamily\small,
-    breaklines=true,
-    frame=single,
-    backgroundcolor=\color{gray!10}
+% ── Hyperlinks ───────────────────────────────────────────────────────────────
+\hypersetup{
+    colorlinks=true,
+    linkcolor=accent,
+    urlcolor=accent,
+    citecolor=accent,
+    pdfborder={0 0 0}
 }
 
-\title{Conducting Wi-Fi Reconnaissance Using Aircrack-ng}
-\author{Sahithyan K. (230557T)}
-\date{\today}
+% ── Section headings ─────────────────────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{accent}}
+  {\thesection.}{0.6em}{}
+  [\vspace{2pt}\color{sectionrule}{\titlerule[0.6pt]}\vspace{4pt}]
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{accent!80!black}}
+  {\thesubsection}{0.6em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\itshape\color{textgrey}}
+  {\thesubsubsection}{0.6em}{}
+
+\titlespacing*{\section}{0pt}{18pt}{8pt}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+\titlespacing*{\subsubsection}{0pt}{8pt}{2pt}
+
+% ── Table of contents ────────────────────────────────────────────────────────
+\titlecontents{section}[1.5em]
+  {\smallskip\bfseries\color{accent}}
+  {\contentslabel{1.5em}}{}
+  {\titlerule*[6pt]{.}\contentspage}
+
+\titlecontents{subsection}[3.5em]
+  {\small\color{textgrey}}
+  {\contentslabel{2em}}{}
+  {\titlerule*[6pt]{.}\contentspage}
+
+% ── Header / footer ──────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{textgrey}\itshape Wi-Fi Reconnaissance Using Aircrack-ng}
+\fancyhead[R]{\small\color{textgrey} Sahithyan K.\ (230557T)}
+\fancyfoot[C]{\small\color{textgrey}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{accent!40}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0pt}
+
+% ── Code listings ────────────────────────────────────────────────────────────
+\lstset{
+    language=bash,
+    basicstyle=\ttfamily\small\color{codefg},
+    keywordstyle=\bfseries\color{keyword},
+    commentstyle=\itshape\color{comment},
+    backgroundcolor=\color{codebg},
+    frame=none,
+    xleftmargin=12pt,
+    xrightmargin=12pt,
+    breaklines=true,
+    breakatwhitespace=true,
+    showstringspaces=false,
+    aboveskip=8pt,
+    belowskip=8pt,
+}
+
+% Wrap every lstlisting in a rounded-corner-like mdframe
+\surroundwithmdframed[
+    backgroundcolor=codebg,
+    linecolor=accent!30,
+    linewidth=0.6pt,
+    roundcorner=4pt,
+    innerleftmargin=8pt,
+    innerrightmargin=8pt,
+    innertopmargin=6pt,
+    innerbottommargin=6pt,
+    skipabove=8pt,
+    skipbelow=8pt,
+]{lstlisting}
+
+% ── List styling ─────────────────────────────────────────────────────────────
+\setlist[itemize]{
+    leftmargin=1.4em,
+    itemsep=3pt,
+    parsep=0pt,
+    label=\textcolor{accent}{$\bullet$}
+}
+
+% ── Paragraph spacing ────────────────────────────────────────────────────────
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+% ── Title ────────────────────────────────────────────────────────────────────
+\title{%
+  {\color{accent}\Large\bfseries Conducting Wi-Fi Reconnaissance}\\[4pt]
+  {\color{textgrey}\normalsize Using the Aircrack-ng Suite}%
+}
+\author{\bfseries Sahithyan K.\quad{\normalfont\color{textgrey}(230557T)}}
+\date{\color{textgrey}\today}
 
 \begin{document}
 
 \maketitle
+\thispagestyle{empty}
+
+\vspace{-6pt}
+{\color{accent!30}\hrule height 0.8pt}
+\vspace{16pt}
 
 \tableofcontents
 \newpage
 
+% ─────────────────────────────────────────────────────────────────────────────
 \section{Introduction}
 
 Wi-Fi reconnaissance is the process of collecting information about nearby wireless networks before conducting security assessments or penetration testing activities. It helps identify wireless access points, security configurations, connected devices, and possible vulnerabilities within a wireless environment.
 
-In this assignment, the Aircrack-ng suite was used to perform Wi-Fi reconnaissance. Aircrack-ng is a collection of tools used for wireless network monitoring, packet capturing, and security analysis. The main tools used during this activity were:
-
+In this assignment, the Aircrack-ng suite was used to perform Wi-Fi reconnaissance. Aircrack-ng is a collection of tools used for wireless network monitoring, packet capturing, and security analysis.
 
 \subsection{Tools Used}
 
 \begin{itemize}
-    \item \textbf{airmon-ng} \\
-    Used to enable monitor mode on the wireless adapter.
-    \item \textbf{airodump-ng} \\
-    Used to scan nearby wireless networks and capture packets.
-    \item \textbf{aireplay-ng} \\
-    Used to perform deauthentication attacks for capturing WPA/WPA2 handshake packets.
+    \item \textbf{airmon-ng} — enables monitor mode on the wireless adapter.
+    \item \textbf{airodump-ng} — scans nearby wireless networks and captures packets.
+    \item \textbf{aireplay-ng} — performs deauthentication attacks for capturing WPA/WPA2 handshake packets.
 \end{itemize}
 
 The reconnaissance process focused on gathering information such as SSIDs, BSSIDs, channels, encryption types, and signal strengths of nearby wireless networks.
 
+% ─────────────────────────────────────────────────────────────────────────────
 \section{Preparation}
 
 Before starting the Wi-Fi reconnaissance process, several preparations were completed to ensure proper functionality of the tools and wireless adapter.
 
-Initially, I was planning to run the reconnaissance on my MacBook. However, the required functionality was not fully available due to hardware and driver limitations. Built-in Wi-Fi adapter did not support monitor mode and packet injection, which is necessary for airodump-ng and aireplay-ng. Because of this limitation, I used a friend's laptop running Ubuntu, which provided better support for Aircrack-ng and wireless adapter functionality.
+Initially, I was planning to run the reconnaissance on my MacBook. However, the required functionality was not fully available due to hardware and driver limitations. The built-in Wi-Fi adapter did not support monitor mode and packet injection, which are necessary for \texttt{airodump-ng} and \texttt{aireplay-ng}. Because of this limitation, I used a friend's laptop running Ubuntu, which provided better support for Aircrack-ng and wireless adapter functionality.
 
 \subsection{Installing Aircrack-ng}
 
@@ -63,7 +177,7 @@ sudo apt install aircrack-ng
 
 \subsection{Checking Wireless Adapter Compatibility}
 
-As I already mentioned, monitor mode and packet ingection were required. The wireless interface was checked using:
+Monitor mode and packet injection support were required. The wireless interface was verified using:
 
 \begin{lstlisting}
 iwconfig
@@ -71,39 +185,36 @@ iwconfig
 
 The detected wireless interface was \texttt{wlp2s0}.
 
-\subsection{Disabling background services}
+\subsection{Disabling Background Services}
 
-To prevent conflicts with the wireless interface:
+To prevent conflicts with the wireless interface, potentially interfering processes were stopped:
 
 \begin{lstlisting}
 sudo airmon-ng check kill
 \end{lstlisting}
 
-This command stops any processes that might interfere with the wireless interface.
-
 \subsection{Enabling Monitor Mode}
 
-To capture wireless traffic, monitor mode was enabled using the following command:
+To capture wireless traffic, monitor mode was enabled:
 
 \begin{lstlisting}
 sudo airmon-ng start wlp2s0
 \end{lstlisting}
 
-After enabling monitor mode, the interface changed to \texttt{wlp2s0mon}.
+After enabling monitor mode, the interface was renamed to \texttt{wlp2s0mon}.
 
+% ─────────────────────────────────────────────────────────────────────────────
 \section{Activities Performed}
 
 \subsection{Scanning Nearby Wireless Networks}
 
-Nearby wireless networks were scanned using \texttt{airodump-ng}.
+Nearby wireless networks were scanned using \texttt{airodump-ng}:
 
 \begin{lstlisting}
 sudo airodump-ng wlan0mon
 \end{lstlisting}
 
-This command displayed information about nearby access points and connected clients.
-
-The following information was collected:
+This command displayed information about nearby access points and connected clients, including:
 
 \begin{itemize}
     \item SSID (Network Name)
@@ -116,23 +227,21 @@ The following information was collected:
 
 \subsection{Targeting a Specific Access Point}
 
-A specific wireless network was selected for packet capture.
+A specific wireless network was selected for deeper packet capture:
 
 \begin{lstlisting}
 sudo airodump-ng -c 6 --bssid XX:XX:XX:XX:XX:XX -w capture wlan0mon
 \end{lstlisting}
 
-Where:
-
 \begin{itemize}
-    \item \texttt{-c} specifies the channel number
-    \item \texttt{--bssid} specifies the target MAC address
-    \item \texttt{-w} saves captured packets
+    \item \texttt{-c} — specifies the channel number
+    \item \texttt{--bssid} — specifies the target MAC address
+    \item \texttt{-w} — writes captured packets to a file
 \end{itemize}
 
 \subsection{Performing a Deauthentication Attack}
 
-A deauthentication attack was performed to force connected clients to reconnect and generate WPA handshake packets.
+A deauthentication attack was performed to force connected clients to reconnect and generate WPA handshake packets:
 
 \begin{lstlisting}
 sudo aireplay-ng --deauth 10 -a XX:XX:XX:XX:XX:XX wlan0mon
@@ -140,11 +249,9 @@ sudo aireplay-ng --deauth 10 -a XX:XX:XX:XX:XX:XX wlan0mon
 
 The attack sent deauthentication frames to connected clients, forcing reconnection to the access point.
 
-\subsection{Capturing WPA Handshake}
+\subsection{Capturing the WPA Handshake}
 
-During reconnection, WPA handshake packets were captured successfully. The handshake notification appeared in the top-right corner of the \texttt{airodump-ng} window.
-
-Example:
+During reconnection, WPA handshake packets were captured successfully. The handshake notification appeared in the top-right corner of the \texttt{airodump-ng} window:
 
 \begin{lstlisting}
 WPA Handshake: XX:XX:XX:XX:XX:XX
@@ -152,25 +259,33 @@ WPA Handshake: XX:XX:XX:XX:XX:XX
 
 Screenshots were taken during each stage of the reconnaissance process.
 
+% ─────────────────────────────────────────────────────────────────────────────
 \section{Results and Observations}
 
 Several wireless networks were identified during the reconnaissance activity.
 
 \subsection{Captured Wireless Network Information}
 
+\vspace{4pt}
 \begin{center}
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-SSID & BSSID & Channel & Encryption & Signal Strength \\
-\hline
-Home\_WiFi & XX:XX:XX:XX:XX:01 & 6 & WPA2 & -45 dBm \\
-\hline
-OfficeNet & XX:XX:XX:XX:XX:02 & 11 & WPA2 & -60 dBm \\
-\hline
-GuestNetwork & XX:XX:XX:XX:XX:03 & 1 & Open & -70 dBm \\
-\hline
+\begin{tabular}{>{\bfseries}l l c l c}
+\arrayrulecolor{accent!40}
+\toprule
+\rowcolor{tableheadbg}
+\textcolor{white}{\textbf{SSID}} &
+\textcolor{white}{\textbf{BSSID}} &
+\textcolor{white}{\textbf{Ch.}} &
+\textcolor{white}{\textbf{Encryption}} &
+\textcolor{white}{\textbf{Signal}} \\
+\midrule
+Home\_WiFi    & XX:XX:XX:XX:XX:01 & 6  & WPA2 & $-45$ dBm \\
+\rowcolor{tablerowalt}
+OfficeNet     & XX:XX:XX:XX:XX:02 & 11 & WPA2 & $-60$ dBm \\
+GuestNetwork  & XX:XX:XX:XX:XX:03 & 1  & Open & $-70$ dBm \\
+\bottomrule
 \end{tabular}
 \end{center}
+\vspace{4pt}
 
 \subsection{Observations}
 
@@ -203,6 +318,7 @@ Example image insertion:
 \end{figure}
 \end{lstlisting}
 
+% ─────────────────────────────────────────────────────────────────────────────
 \section{Interpretation of the Findings}
 
 The reconnaissance activity showed that wireless networks expose a significant amount of information even before authentication.
@@ -237,6 +353,7 @@ The collected information could potentially be used for:
     \item Denial-of-service attacks
 \end{itemize}
 
+% ─────────────────────────────────────────────────────────────────────────────
 \section{Summary and Conclusion}
 
 This assignment demonstrated the process of conducting Wi-Fi reconnaissance using the Aircrack-ng suite. The tools \texttt{airmon-ng}, \texttt{airodump-ng}, and \texttt{aireplay-ng} were used to scan nearby wireless networks, gather information, and capture WPA/WPA2 handshake packets.
@@ -247,12 +364,12 @@ The findings highlighted several wireless security concerns, especially the risk
 
 \subsection{Recommendations}
 
-The following recommendations can improve wireless security:
+The following measures can improve wireless security:
 
 \begin{itemize}
     \item Use WPA2 or WPA3 encryption
     \item Avoid open wireless networks
-    \item Use strong passwords
+    \item Use strong, unique passwords
     \item Disable WPS functionality
     \item Regularly update router firmware
     \item Monitor connected devices regularly
