@@ -20,6 +20,13 @@
 \usepackage{array}
 \usepackage{colortbl}
 \usepackage{tabularx}
+\usepackage{needspace}
+\usepackage{etoolbox}
+
+% ── Avoid headings near the bottom of the page ──────────────────────────────
+\pretocmd{\section}{\Needspace*{0.40\textheight}}{}{}
+\pretocmd{\subsection}{\Needspace*{0.25\textheight}}{}{}
+\pretocmd{\subsubsection}{\Needspace*{0.15\textheight}}{}{}
 
 % ── Colour palette ──────────────────────────────────────────────────────────
 \definecolor{accent}{RGB}{35, 75, 140}         % muted navy
@@ -147,40 +154,40 @@
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Introduction}
 
-Wi-Fi reconnaissance is the process of collecting information about nearby wireless networks before conducting security assessments or penetration testing activities. It helps identify wireless access points, security configurations, connected devices, and possible vulnerabilities within a wireless environment.
+Wi-Fi reconnaissance means gathering information about nearby wireless networks. It is the first step in a security assessment: find access points, check their configuration, and identify weaknesses.
 
-In this assignment, the Aircrack-ng suite was used to perform Wi-Fi reconnaissance. Aircrack-ng is a collection of tools used for wireless network monitoring, packet capturing, and security analysis.
+For this assignment I used the Aircrack-ng suite, a set of command-line tools for sniffing wireless traffic and capturing packets.
 
 \subsection{Tools Used}
 
 \begin{itemize}
-    \item \textbf{airmon-ng}: enables monitor mode on the wireless adapter.
-    \item \textbf{airodump-ng}: scans nearby wireless networks and captures packets.
-    \item \textbf{aireplay-ng}: performs deauthentication attacks for capturing WPA/WPA2 handshake packets.
+    \item \textbf{airmon-ng}: puts the wireless adapter into monitor mode.
+    \item \textbf{airodump-ng}: scans nearby networks and captures packets.
+    \item \textbf{aireplay-ng}: sends deauth frames to trigger a WPA/WPA2 handshake.
 \end{itemize}
 
-The reconnaissance process focused on gathering information such as SSIDs, BSSIDs, channels, encryption types, and signal strengths of nearby wireless networks.
+The goal: collect SSIDs, BSSIDs, channels, encryption types, and signal strengths from networks in range.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Preparation}
 
-Before starting, several preparations were made to ensure the tools and wireless adapter worked correctly.
+Some setup was required before starting.
 
-The reconnaissance was initially planned on a MacBook, but the built-in Wi-Fi adapter did not support monitor mode or packet injection, which are required by \texttt{airodump-ng} and \texttt{aireplay-ng}. A Lenovo Vostro 15 running Ubuntu 24.04 was used instead. It has a Realtek RTL8852BE PCIe 802.11ax wireless adapter with full support for monitor mode and the Aircrack-ng suite.
+The MacBook's built-in Wi-Fi card does not support monitor mode or packet injection, so I used a Lenovo Vostro 15 running Ubuntu 24.04. Its Realtek RTL8852BE card supports both.
 
 \subsection{Background}
 
 \subsubsection{802.11 Wireless Communication}
 
-Wi-Fi devices communicate using the IEEE 802.11 family of standards over shared radio frequencies. All frames broadcast over the air are visible to any nearby device operating in \emph{monitor mode}, which allows passive capture without association to any network. 802.11 defines three frame types: management frames (beacons, probe requests, authentication, deauthentication), control frames, and data frames. Management frames in WPA and WPA2 networks are sent in plaintext and carry no authentication, which is the root cause of the deauthentication vulnerability exploited later in this assignment.
+Wi-Fi uses IEEE 802.11 over shared radio frequencies. In \emph{monitor mode}, a device receives all frames without joining a network. 802.11 has three frame types: management (beacons, probe requests, authentication, deauthentication), control, and data. Under WPA and WPA2, management frames are plaintext and unauthenticated. This is why the deauth attack works.
 
 \subsubsection{WPA, WPA2, and WPA3}
 
-\textbf{WPA} (Wi-Fi Protected Access, 2003) was introduced as an emergency replacement for the broken WEP standard. It uses the TKIP cipher, which wraps RC4 with per-packet key mixing. TKIP is now considered cryptographically weak and is deprecated.
+\textbf{WPA} (2003) replaced WEP using TKIP, which wraps RC4 with per-packet key mixing. TKIP is weak and should not be used.
 
-\textbf{WPA2} (IEEE 802.11i, 2004) replaced TKIP with the AES-based CCMP cipher, which is significantly stronger. Two authentication modes exist: Personal (PSK, a shared passphrase) and Enterprise (802.1X with a RADIUS server). WPA2-Personal is the most common deployment and is the target of offline passphrase-cracking attacks once the four-way handshake is captured.
+\textbf{WPA2} (IEEE 802.11i, 2004) replaced TKIP with AES-CCMP. It has two modes: Personal (PSK) and Enterprise (802.1X). With the four-way handshake, PSK mode can be attacked offline.
 
-\textbf{WPA3} (2018) introduced Simultaneous Authentication of Equals (SAE). SAE replaces the PSK handshake with a Diffie-Hellman-based exchange, providing forward secrecy and resistance to offline dictionary attacks. WPA3 also mandates Protected Management Frames (PMF/802.11w), which prevents the deauthentication attack described in Section~\ref{sec:deauth}.
+\textbf{WPA3} (2018) introduced SAE (Simultaneous Authentication of Equals), replacing the PSK handshake. SAE provides forward secrecy and prevents offline dictionary attacks. WPA3 also requires Protected Management Frames (PMF / 802.11w), which blocks the deauth attack (Section~\ref{sec:deauth}).
 
 \vspace{4pt}
 \begin{tabularx}{\textwidth}{>{\bfseries\footnotesize}l >{\centering\arraybackslash\footnotesize}p{1cm} >{\footnotesize}l >{\footnotesize}X >{\footnotesize}l}
@@ -205,11 +212,11 @@ WPA3 & 2018 & AES-GCMP + SAE     & No known practical attacks            & Recom
 
 \subsubsection{The WPA/WPA2 Four-Way Handshake}
 
-When a client connects to a WPA2 network, a four-message exchange derives the session key (PTK) from the PSK and two random nonces from the access point and client. No plaintext password is transmitted, but the handshake contains enough material for offline attacks: a candidate passphrase is used to recompute the MIC (message integrity code), and if it matches the captured value, the passphrase is correct. Capturing this handshake is the primary goal of the targeted capture and deauthentication steps below.
+When a client joins a WPA2 network, the AP and client exchange four messages to derive a session key (PTK) from the passphrase and two random nonces. The passphrase is never sent directly. The handshake includes a MIC computed from the passphrase. An attacker captures the handshake, guesses a passphrase, recomputes the MIC, and checks for a match. This can be done offline, without further contact with the network.
 
 \subsection{Installing Aircrack-ng}
 
-The Aircrack-ng suite was installed on a Linux system using the package manager.
+Installed through apt:
 
 \begin{lstlisting}
 sudo apt install aircrack-ng
@@ -217,23 +224,23 @@ sudo apt install aircrack-ng
 
 \subsection{Checking Wireless Adapter Compatibility}
 
-Monitor mode and packet injection support were required. The wireless interface was verified using:
+The adapter needs monitor mode and injection. I checked the interface with:
 
 \begin{lstlisting}
 iwconfig
 \end{lstlisting}
 
-The detected wireless interface was \texttt{wlp2s0}.
+The wireless interface showed up as \texttt{wlp2s0}.
 
 \subsection{Disabling Background Services}
 
-To prevent conflicts with the wireless interface, potentially interfering processes were stopped:
+\texttt{wpa\_supplicant} and \texttt{avahi} interfere with \texttt{airodump-ng}. Kill them with:
 
 \begin{lstlisting}
 sudo airmon-ng check kill
 \end{lstlisting}
 
-The following processes were identified and killed:
+The processes it killed:
 
 \begin{tabularx}{\textwidth}{r X}
 \arrayrulecolor{accent!40}
@@ -250,30 +257,30 @@ The following processes were identified and killed:
 
 \subsection{Enabling Monitor Mode}
 
-To capture wireless traffic, monitor mode was enabled:
+Then I switched the adapter into monitor mode:
 
 \begin{lstlisting}
 sudo airmon-ng start wlp2s0
 \end{lstlisting}
 
-After enabling monitor mode, the interface was renamed to \texttt{wlp2s0mon}.
+The interface got renamed to \texttt{wlp2s0mon}.
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Activities, Results, and Interpretation}
+\section{Activities and Results}
 
 \subsection{Passive Network Scanning}
 
-Passive scanning is the first step in any wireless assessment: the adapter listens without transmitting, so no packets are sent to any network and no interaction occurs. This phase identifies potential targets (BSSIDs, channels, encryption types, and connected clients) before any active technique is attempted.
+In passive scanning, the adapter listens without transmitting or joining any network. This reveals BSSIDs, channels, encryption types, and connected clients.
 
-Nearby wireless networks were scanned using \texttt{airodump-ng}:
+I scanned with \texttt{airodump-ng}:
 
 \begin{lstlisting}
 sudo airodump-ng wlp2s0mon
 \end{lstlisting}
 
-This command displayed information about nearby access points and connected clients, including SSID, BSSID, channel, encryption type, signal strength, and associated clients. Six scanning sessions were conducted on 2026-05-16 (12:27–12:54), totalling approximately 27 minutes of passive capture. A total of \textbf{39 unique access points} were detected.
+This outputs each nearby AP with its SSID, BSSID, channel, encryption, signal, and clients. Six sessions on 2026-05-16 (12:27--12:54, ~27 minutes) found \textbf{39 unique access points} and ~\textbf{192,000 frames} (31,000 beacons, 161,000 data).
 
-A representative selection of the detected networks is shown below, ordered by signal strength:
+A sample sorted by signal:
 
 \vspace{4pt}
 \begin{tabularx}{\textwidth}{>{\bfseries\footnotesize}X >{\footnotesize}l >{\centering\arraybackslash\footnotesize}p{0.6cm} >{\footnotesize}l >{\centering\arraybackslash\footnotesize}p{1.5cm}}
@@ -305,38 +312,36 @@ SLT-4G-EAFC           & 0C:8F:FF:28:14:7C & 6  & WPA2 / WPA    & $-91$ dBm \\
 \end{tabularx}
 \vspace{4pt}
 
-\textbf{Observations:}
+Signal is in dBm; more negative means weaker. $-47$\,dBm is strong (under 10\,m), $-70$\,dBm is usable, $-80$\,dBm is marginal, $-91$\,dBm is at the edge.
 
 \begin{itemize}
-    \item \textbf{32 networks} used WPA2 encryption; \textbf{1 network} (Redmi A5) used WPA3.
-    \item \textbf{4 networks} were fully open (no encryption), including the ``Redmi A1+'' hotspot.
-    \item \textbf{7 networks} broadcast with a hidden SSID (empty ESSID field).
-    \item Several networks advertised both WPA2 and the older WPA standard simultaneously, indicating mixed-mode or legacy configurations.
-    \item Multiple mobile hotspots were visible, including devices named ``Thavanathan's iPhone'', ``Galaxy M0298c8'', and ``TimBaTTuK's S25 Ultra''.
-    \item IoT and surveillance devices were identifiable by their SSIDs: EZVIZ\_ (security camera), DDPAI\_ and 70mai\_ (dash cameras), and three WIFIBRG\_ bridge units.
-    \item Vehicle-mounted access points were present: ``Vezel-Dash-Cam'' and ``In\_Vehicle\_Wifi''.
-    \item Up to 3 associated client devices were observed around a single access point during capture, making client tracking possible.
+    \item \textbf{32 networks} used WPA2, \textbf{1} (Redmi A5) used WPA3. Most routers and ISPs do not support WPA3.
+    \item \textbf{4 networks} were open, including the ``Redmi A1+'' hotspot.
+    \item \textbf{7 networks} had hidden SSIDs (empty ESSID in the beacon).
+    \item Some APs ran mixed WPA/WPA2 mode.
+    \item Several mobile hotspots were visible: ``Thavanathan's iPhone'', ``Galaxy M0298c8'', ``TimBaTTuK's S25 Ultra''.
+    \item IoT devices were identifiable by SSID: EZVIZ\_ (camera), DDPAI\_ and 70mai\_ (dash cams), three WIFIBRG\_ bridges.
+    \item Two vehicle APs: ``Vezel-Dash-Cam'' and ``In\_Vehicle\_Wifi''.
+    \item Up to 3 clients per AP were visible, so passive capture tracks devices too.
 \end{itemize}
 
-\textbf{Interpretation:}
-
-The scan results illustrate how much a passive observer can learn without authenticating to any network. Four open networks expose all transmitted traffic in plaintext, leaving users vulnerable to credential theft and session hijacking. The 32 WPA2 networks provide reasonable protection with strong passphrases, but several ISP and IoT devices broadcast mixed WPA/WPA2 configurations, which reintroduce the weaker TKIP cipher and can be exploited. Only one network used WPA3, underscoring its slow real-world adoption. The seven hidden SSIDs offer no practical security benefit: access points still broadcast beacon frames and were captured trivially by \texttt{airodump-ng}. IoT devices (cameras, dash cameras, bridge units) advertise distinctive SSIDs and typically run outdated firmware, making them attractive entry points for network intrusion.
+Open networks expose all traffic in plaintext. WPA2 is acceptable with a strong passphrase, but mixed WPA/WPA2 falls back to TKIP, which is weak. Hidden SSIDs offer no real protection; the AP still beacons and \texttt{airodump-ng} captured them. IoT devices are easy to identify by SSID and typically run outdated firmware.
 
 \subsection{Targeted Packet Capture}
 
-A specific wireless network was selected for deeper packet capture:
+I picked one network and locked the capture onto it:
 
 \begin{lstlisting}
 sudo airodump-ng -c 6 --bssid A6:8E:DC:82:EB:7B -w capture wlp2s0mon
 \end{lstlisting}
 
 \begin{itemize}
-    \item \texttt{-c}: specifies the channel number
-    \item \texttt{--bssid}: specifies the target MAC address
-    \item \texttt{-w}: writes captured packets to a file
+    \item \texttt{-c}: channel number
+    \item \texttt{--bssid}: target AP's MAC
+    \item \texttt{-w}: write packets to a file
 \end{itemize}
 
-The capture session ran from \textbf{12:56:33} to \textbf{12:57:12} (approximately 39 seconds). The following access point and client data were recorded:
+The capture ran from \textbf{12:56:33} to \textbf{12:57:12} (39 seconds):
 
 \vspace{4pt}
 \begin{tabularx}{\textwidth}{>{\bfseries\footnotesize}X >{\footnotesize}l >{\centering\arraybackslash\footnotesize}p{0.6cm} >{\footnotesize}l >{\centering\arraybackslash\footnotesize}p{1.5cm} >{\centering\arraybackslash\footnotesize}p{1.4cm} >{\centering\arraybackslash\footnotesize}p{1.2cm}}
@@ -356,7 +361,7 @@ Thavanathan's iPhone & A6:8E:DC:82:EB:7B & 6 & WPA2 (CCMP/PSK) & $-78$ dBm & 322
 \end{tabularx}
 \vspace{4pt}
 
-Two client devices were observed associated with this access point:
+Two clients were associated with the AP:
 
 \vspace{4pt}
 \begin{tabularx}{\textwidth}{>{\footnotesize}l >{\centering\arraybackslash\footnotesize}p{1.5cm} >{\centering\arraybackslash\footnotesize}p{1.4cm} >{\footnotesize}X}
@@ -375,103 +380,106 @@ Two client devices were observed associated with this access point:
 \end{tabularx}
 \vspace{4pt}
 
-\textbf{Interpretation:}
+Pinning to one channel and BSSID filters all frames to the target. 1,407 data frames in 40 seconds is enough to work with.
 
-Locking \texttt{airodump-ng} to a single channel and BSSID focuses all captured frames on one target, enabling reliable client enumeration in a short time. The 1,407 data frames captured in under 40 seconds show that even brief sessions yield enough material for further analysis.
+For WPA cracking, beacons and data frames do not matter. Only the four handshake frames are needed. Without them, no amount of data helps.
 
 \subsection{Deauthentication Attack}
 \label{sec:deauth}
 
-A deauthentication attack was performed against an isolated private Wi-Fi access point (a personal mobile hotspot) to force connected clients to reconnect and generate WPA handshake packets. The target was selected because it was under personal control and no third-party devices were affected.
+I ran a deauth attack against my own hotspot to force clients to reconnect and trigger the WPA handshake. No other devices were affected.
 
 \subsubsection{Broadcast Deauthentication}
 
-An initial broadcast deauthentication attack was sent to all clients associated with the target access point:
+First, a broadcast deauth targeting all clients of the AP:
 
 \begin{lstlisting}
 sudo aireplay-ng -0 5 -a A6:8E:DC:82:EB:7B wlp2s0mon
 \end{lstlisting}
 
-This sent five deauthentication frames to the broadcast address, requesting all connected clients to disconnect from the access point.
+This sends five deauth frames to the broadcast address, disconnecting all clients.
 
 \subsubsection{Directed Deauthentication}
 
-A directed attack targeting a specific client was then attempted. An initial attempt failed because the monitor interface was locked to channel 13 while the access point operated on channel 6:
+The first directed attempt failed because the monitor interface was on channel 13 instead of channel 6:
 
 \begin{lstlisting}
 sudo aireplay-ng -0 5 -a A6:8E:DC:82:EB:7B -c 14:5A:FC:81:7E:1D wlp2s0mon
 \end{lstlisting}
 
-Running \texttt{airmon-ng check kill} resolved the channel lock issue. A subsequent directed deauthentication against client \texttt{24:EB:16:56:E1:CC} succeeded:
+Running \texttt{airmon-ng check kill} fixed the channel. The next attempt, against \texttt{24:EB:16:56:E1:CC}, worked:
 
 \begin{lstlisting}
 sudo aireplay-ng -0 5 -a A6:8E:DC:82:EB:7B -c 24:EB:16:56:E1:CC wlp2s0mon
 \end{lstlisting}
 
-\texttt{aireplay-ng} reported 63 out of 67 ACKs for the sent frames, confirming the client received and acted upon the deauthentication packets.
+\texttt{aireplay-ng} got 63 ACKs out of 67, confirming the client received the frames.
 
-A continuous attack (\texttt{-0 0}) was then run for approximately five minutes to observe sustained deauthentication behaviour. ACK counts varied across packets, indicating intermittent reconnection attempts by the client.
+A continuous attack (\texttt{-0 0}) ran for five minutes. ACK counts varied as the client repeatedly tried to reconnect.
 
 \subsubsection{Fake Authentication Attempt}
 
-A fake authentication request was also sent to the access point to test association behaviour:
+I also attempted a fake authentication:
 
 \begin{lstlisting}
 sudo aireplay-ng -1 0 -a A6:8E:DC:82:EB:7B -c 24:EB:16:56:E1:CC wlp2s0mon
 \end{lstlisting}
 
-The open-system authentication succeeded, but the subsequent association request was denied with status code 12 (\emph{wrong ESSID or WPA}), confirming that WPA2 protection was enforced and association without valid credentials was not possible.
+The auth step succeeded, but association failed with status code 12 (\emph{wrong ESSID or WPA}). On an open network it would have succeeded, exposing traffic in plaintext.
 
-\textbf{Interpretation:}
-
-The attack exposed a fundamental weakness in 802.11: management frames such as deauthentication are unauthenticated, so any station can forge and send them without network credentials. The high ACK rates (63 out of 67) confirm the client received and acted on the frames. WPA3 networks with Management Frame Protection (MFP) are immune because their management frames are cryptographically signed. Since almost no detected networks used WPA3, this technique would work against nearly all observed access points.
+Deauth frames in 802.11 are unauthenticated; anyone can send them. The 63/67 ACK rate confirms the client accepted them. WPA3 with PMF signs management frames and blocks this attack. Since almost no network in range used WPA3, this attack applies to nearly all of them.
 
 \subsection{WPA Handshake Capture}
 
-During reconnection triggered by the deauthentication attack, WPA handshake packets were captured successfully. The handshake notification appeared in the top-right corner of the \texttt{airodump-ng} window:
+After the deauth, the client reconnected and the handshake appeared in the capture:
 
 \begin{lstlisting}
 WPA Handshake: A6:8E:DC:82:EB:7B
 \end{lstlisting}
 
-\textbf{Interpretation:}
-
-Capturing the four-way WPA handshake is the prerequisite for offline passphrase cracking. Once captured, an attacker can run dictionary or brute-force attacks using tools such as \texttt{aircrack-ng} or \texttt{hashcat} with no further interaction with the network. A weak passphrase can therefore be recovered long after the capture. The collected information could be used for unauthorised network access, password cracking, traffic monitoring, device tracking, and denial-of-service attacks.
+With the handshake, \texttt{aircrack-ng} or \texttt{hashcat} can test passphrases offline. A weak passphrase can be cracked in hours or days. Combined with the scan data, this is enough for unauthorised access, traffic monitoring, device tracking, and denial of service.
 
 \subsection{Passphrase Cracking Attempt}
 
-To illustrate the offline cracking phase, \texttt{aircrack-ng} was run against the captured handshake file using the \texttt{rockyou.txt} wordlist, one of the most widely used password dictionaries in security assessments:
+I ran \texttt{aircrack-ng} against the capture using the \texttt{rockyou.txt} wordlist:
 
 \begin{lstlisting}
 aircrack-ng -w /usr/share/wordlists/rockyou.txt capture-01.cap
 \end{lstlisting}
 
-The attack ran for approximately 20 minutes running \textbf{14,344,391} candidate passphrases at a sustained rate of approximately \textbf{11,780 keys per second}. The correct passphrase was \textbf{not found} within the rockyou list.
+It ran for 20 minutes, testing \textbf{14,344,391} candidates at ~\textbf{11,780 keys/second}. The passphrase \textbf{was not found}.
 
-The failed dictionary attack shows that a strong passphrase is an effective defence against offline attacks, even after the four-way handshake is captured. Recovering such a passphrase would require larger wordlists, rule-based mutations, or full brute-force, each increasing time and computational cost by orders of magnitude.
+A passphrase not in common wordlists will not fall to a dictionary attack. Going further requires larger wordlists, GPU hardware, or significant compute time.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Summary and Conclusion}
 
-This assignment demonstrated the process of conducting Wi-Fi reconnaissance using the Aircrack-ng suite. The tools \texttt{airmon-ng}, \texttt{airodump-ng}, and \texttt{aireplay-ng} were used to scan nearby wireless networks, gather information, and capture WPA/WPA2 handshake packets.
+This assignment covered Wi-Fi reconnaissance with Aircrack-ng. Using \texttt{airmon-ng}, \texttt{airodump-ng}, and \texttt{aireplay-ng}, I scanned nearby networks and captured a WPA2 handshake.
 
-Across six scanning sessions conducted on 2026-05-16 (12:27–12:54), 39 unique access points were identified. Their SSIDs, BSSIDs, channels, encryption configurations, and signal strengths were collected passively without authenticating to any network. The activity also demonstrated how deauthentication attacks can force clients to reconnect and generate handshake packets for offline analysis.
+Six sessions on 2026-05-16 (12:27--12:54) found 39 access points. All data was collected passively without joining any network. The deauth attack forced a reconnect and produced the handshake.
 
-The findings highlighted several real-world wireless security concerns: the presence of open hotspots, wide deployment of legacy mixed WPA/WPA2 configurations, near-absent WPA3 adoption, inadequately obscured IoT devices, and the fundamental insecurity of unauthenticated 802.11 management frames.
+Notable findings: open hotspots, mixed WPA/WPA2 setups, minimal WPA3 adoption, identifiable IoT devices, and unauthenticated management frames.
+
+\textbf{Takeaways:}
+
+\begin{itemize}
+    \item Passive scanning reveals SSIDs, BSSIDs, encryption, channels, signal, and vendor hints without any authentication.
+    \item Unauthenticated management frames mean deauth attacks work against almost every WPA2 network. WPA3 with PMF is the only fix.
+    \item Once captured, the handshake can be attacked offline indefinitely. A strong passphrase is the only defence.
+    \item WPA3 adoption is slow. None of the 39 APs ran WPA3 exclusively.
+\end{itemize}
 
 \subsection{Recommendations}
 
-The following measures can improve wireless security:
-
 \begin{itemize}
-    \item Use WPA2 or WPA3 encryption
-    \item Avoid open wireless networks
-    \item Use strong, unique passwords
-    \item Disable WPS functionality
-    \item Regularly update router firmware
-    \item Monitor connected devices regularly
+    \item \textbf{Use WPA3 if possible, WPA2 at minimum.} WPA3's PMF blocks deauth attacks and SAE prevents offline cracking. Avoid mixed WPA/WPA2 modes, which fall back to TKIP.
+    \item \textbf{Don't use open Wi-Fi.} Traffic is plaintext and visible to anyone in range.
+    \item \textbf{Use a strong passphrase.} A passphrase not in common wordlists will not fall to a dictionary attack. Avoid real words and short phrases.
+    \item \textbf{Keep firmware updated,} especially on ISP routers and IoT devices.
+    \item \textbf{Disable WPS.} Its PIN is vulnerable to brute force regardless of the WPA2 passphrase.
+    \item \textbf{Periodically check the client list} for unknown devices.
 \end{itemize}
 
-In conclusion, Wi-Fi reconnaissance is an important part of wireless security assessment because it helps identify vulnerabilities and security weaknesses before attackers can exploit them.
+Wi-Fi reconnaissance surfaces weak spots before someone else finds them.
 
 \end{document}
