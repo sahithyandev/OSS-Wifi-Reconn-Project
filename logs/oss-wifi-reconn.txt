@@ -11,28 +11,12 @@ wlp2s0    IEEE 802.11  ESSID:"Sahithyan"
 
 k-rakeshan@Hellboy:~$ sudo airmon-ng start wlp2s0
 
-Found 2 processes that could cause trouble.
-Kill them using 'airmon-ng check kill' before putting
-the card in monitor mode, they will interfere by changing channels
-and sometimes putting the interface back in managed mode
-
-    PID Name
-1323577 avahi-daemon
-1323579 avahi-daemon
 
 PHY	Interface	Driver		Chipset
 
 phy0	wlp2s0		rtw89_8852be	Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11ax Wireless Network Controller
 		(mac80211 monitor mode vif enabled for [phy0]wlp2s0 on [phy0]wlp2s0mon)
 		(mac80211 station mode vif disabled for [phy0]wlp2s0)
-
-k-rakeshan@Hellboy:~$ sudo airmon-ng check kill
-
-Killing these processes:
-
-    PID Name
-1323886 avahi-daemon
-1323891 avahi-daemon
 
 k-rakeshan@Hellboy:~$ sudo airmon-ng start wlp2s0
 
@@ -57,14 +41,6 @@ phy0	wlp2s0mon	rtw89_8852be	Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.1
 
 k-rakeshan@Hellboy:~$ sudo airmon-ng start wlp2s0mon
 
-Found 2 processes that could cause trouble.
-Kill them using 'airmon-ng check kill' before putting
-the card in monitor mode, they will interfere by changing channels
-and sometimes putting the interface back in managed mode
-
-    PID Name
-1323903 avahi-daemon
-1323904 avahi-daemon
 
 PHY	Interface	Driver		Chipset
 
@@ -86,43 +62,8 @@ phy0	wlp2s0		rtw89_8852be	Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11a
 
 k-rakeshan@Hellboy:~$ sudo airmon-ng start wlp2s0
 
-Found 2 processes that could cause trouble.
-Kill them using 'airmon-ng check kill' before putting
-the card in monitor mode, they will interfere by changing channels
-and sometimes putting the interface back in managed mode
-
-    PID Name
-1323903 avahi-daemon
-1323904 avahi-daemon
-
 PHY	Interface	Driver		Chipset
 
 phy0	wlp2s0		rtw89_8852be	Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11ax Wireless Network Controller
 		(mac80211 monitor mode vif enabled for [phy0]wlp2s0 on [phy0]wlp2s0mon)
 		(mac80211 station mode vif disabled for [phy0]wlp2s0)
-
-k-rakeshan@Hellboy:~$ sudo airmon-ng 
-
-PHY	Interface	Driver		Chipset
-
-phy0	wlp2s0mon	rtw89_8852be	Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11ax Wireless Network Controller
-
-k-rakeshan@Hellboy:~$ iwconfig
-lo        no wireless extensions.
-
-enp3s0    no wireless extensions.
-
-docker0   no wireless extensions.
-
-br-d93556ea2279  no wireless extensions.
-
-br-22e74d9f1de7  no wireless extensions.
-
-br-e070edbe215a  no wireless extensions.
-
-br-47091fa56a0d  no wireless extensions.
-
-wlp2s0mon  IEEE 802.11  Mode:Monitor  Frequency:2.457 GHz  Tx-Power=20 dBm   
-          Retry short limit:7   RTS thr:off   Fragment thr:off
-          Power Management:on
-

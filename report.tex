@@ -19,17 +19,18 @@
 \usepackage{hyperref}
 \usepackage{array}
 \usepackage{colortbl}
+\usepackage{tabularx}
 
 % ── Colour palette ──────────────────────────────────────────────────────────
-\definecolor{accent}{RGB}{30, 100, 200}        % deep blue
-\definecolor{accentlight}{RGB}{220, 232, 252}  % pale blue tint
-\definecolor{codebg}{RGB}{245, 247, 250}       % near-white slate
+\definecolor{accent}{RGB}{35, 75, 140}         % muted navy
+\definecolor{accentlight}{RGB}{225, 230, 242}  % pale tint
+\definecolor{codebg}{RGB}{245, 246, 248}       % near-white slate
 \definecolor{codefg}{RGB}{30, 40, 60}          % dark navy for code text
-\definecolor{keyword}{RGB}{180, 30, 80}        % crimson for keywords
-\definecolor{comment}{RGB}{100, 120, 140}      % muted blue-grey
-\definecolor{tableheadbg}{RGB}{30, 100, 200}
-\definecolor{tablerowalt}{RGB}{240, 245, 255}
-\definecolor{sectionrule}{RGB}{30, 100, 200}
+\definecolor{keyword}{RGB}{160, 30, 70}        % crimson for keywords
+\definecolor{comment}{RGB}{100, 115, 130}      % muted grey
+\definecolor{tableheadbg}{RGB}{55, 65, 80}     % dark slate (not blue)
+\definecolor{tablerowalt}{RGB}{245, 246, 248}
+\definecolor{sectionrule}{RGB}{130, 145, 165}  % neutral grey rule
 \definecolor{textgrey}{RGB}{80, 90, 100}
 
 % ── Hyperlinks ───────────────────────────────────────────────────────────────
@@ -43,12 +44,12 @@
 
 % ── Section headings ─────────────────────────────────────────────────────────
 \titleformat{\section}
-  {\large\bfseries\color{accent}}
+  {\large\bfseries\color{black}}
   {\thesection.}{0.6em}{}
   [\vspace{2pt}\color{sectionrule}{\titlerule[0.6pt]}\vspace{4pt}]
 
 \titleformat{\subsection}
-  {\normalsize\bfseries\color{accent!80!black}}
+  {\normalsize\bfseries\color{black!80}}
   {\thesubsection}{0.6em}{}
 
 \titleformat{\subsubsection}
@@ -61,7 +62,7 @@
 
 % ── Table of contents ────────────────────────────────────────────────────────
 \titlecontents{section}[1.5em]
-  {\smallskip\bfseries\color{accent}}
+  {\smallskip\bfseries\color{black}}
   {\contentslabel{1.5em}}{}
   {\titlerule*[6pt]{.}\contentspage}
 
@@ -94,7 +95,7 @@
     breakatwhitespace=true,
     showstringspaces=false,
     aboveskip=8pt,
-    belowskip=8pt,
+    belowskip=2pt,
 }
 
 % Wrap every lstlisting in a rounded-corner-like mdframe
@@ -106,9 +107,9 @@
     innerleftmargin=8pt,
     innerrightmargin=8pt,
     innertopmargin=6pt,
-    innerbottommargin=6pt,
+    innerbottommargin=2pt,
     skipabove=8pt,
-    skipbelow=8pt,
+    skipbelow=2pt,
 ]{lstlisting}
 
 % ── List styling ─────────────────────────────────────────────────────────────
@@ -116,7 +117,7 @@
     leftmargin=1.4em,
     itemsep=3pt,
     parsep=0pt,
-    label=\textcolor{accent}{$\bullet$}
+    label=\textcolor{textgrey}{$\bullet$}
 }
 
 % ── Paragraph spacing ────────────────────────────────────────────────────────
@@ -195,8 +196,7 @@ sudo airmon-ng check kill
 
 The following processes were identified and killed:
 
-\begin{center}
-\begin{tabular}{r l}
+\begin{tabularx}{\textwidth}{r X}
 \arrayrulecolor{accent!40}
 \toprule
 \rowcolor{tableheadbg}
@@ -207,8 +207,7 @@ The following processes were identified and killed:
 1323558 & avahi-daemon \\
 1323562 & avahi-daemon \\
 \bottomrule
-\end{tabular}
-\end{center}
+\end{tabularx}
 
 \subsection{Enabling Monitor Mode}
 
@@ -284,8 +283,7 @@ Several wireless networks were identified during the reconnaissance activity.
 \subsection{Captured Wireless Network Information}
 
 \vspace{4pt}
-\begin{center}
-\begin{tabular}{>{\bfseries}l l c l c}
+\begin{tabularx}{\textwidth}{>{\bfseries}l l c l c}
 \arrayrulecolor{accent!40}
 \toprule
 \rowcolor{tableheadbg}
@@ -300,8 +298,7 @@ Home\_WiFi    & XX:XX:XX:XX:XX:01 & 6  & WPA2 & $-45$ dBm \\
 OfficeNet     & XX:XX:XX:XX:XX:02 & 11 & WPA2 & $-60$ dBm \\
 GuestNetwork  & XX:XX:XX:XX:XX:03 & 1  & Open & $-70$ dBm \\
 \bottomrule
-\end{tabular}
-\end{center}
+\end{tabularx}
 \vspace{4pt}
 
 \subsection{Observations}

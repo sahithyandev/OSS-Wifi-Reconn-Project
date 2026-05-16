@@ -1,46 +1,4 @@
-k-rakeshan@Hellboy:~$ sudo airmon-ng 
-
-PHY	Interface	Driver		Chipset
-
-phy0	wlp2s0mon	rtw89_8852be	Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11ax Wireless Network Controller
-
 k-rakeshan@Hellboy:~$ sudo airodump-ng wlp2s0mon
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
  CH 11 ][ Elapsed: 1 min ][ 2026-05-16 12:26 
 
