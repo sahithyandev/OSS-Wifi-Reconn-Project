@@ -373,19 +373,19 @@ This sent five deauthentication frames to the broadcast address, requesting all 
 
 \subsubsection{Directed Deauthentication}
 
-A directed attack targeting a specific client was then attempted. An initial attempt failed due to a channel mismatch — the monitor interface was locked to a different channel than the access point (channel 6):
+A directed attack targeting a specific client was then attempted. An initial attempt failed because the monitor interface was locked to channel 13 while the access point operated on channel 6:
 
 \begin{lstlisting}
 sudo aireplay-ng -0 5 -a A6:8E:DC:82:EB:7B -c 14:5A:FC:81:7E:1D wlp2s0mon
-# wlp2s0mon is on channel 13, but the AP uses channel 6
 \end{lstlisting}
 
-Running \texttt{airmon-ng check kill} resolved the channel lock issue. A subsequent directed deauthentication against client \texttt{24:EB:16:56:E1:CC} succeeded, confirmed by the ACK counts reported by \texttt{aireplay-ng}:
+Running \texttt{airmon-ng check kill} resolved the channel lock issue. A subsequent directed deauthentication against client \texttt{24:EB:16:56:E1:CC} succeeded:
 
 \begin{lstlisting}
 sudo aireplay-ng -0 5 -a A6:8E:DC:82:EB:7B -c 24:EB:16:56:E1:CC wlp2s0mon
-# 12:46:10  Sending 64 directed DeAuth (code 7). STMAC: [24:EB:16:56:E1:CC] [63|67 ACKs]
 \end{lstlisting}
+
+\texttt{aireplay-ng} reported 63 out of 67 ACKs for the sent frames, confirming the client received and acted upon the deauthentication packets.
 
 A continuous attack (\texttt{-0 0}) was then run for approximately five minutes to observe sustained deauthentication behaviour. ACK counts varied across packets, indicating intermittent reconnection attempts by the client.
 
