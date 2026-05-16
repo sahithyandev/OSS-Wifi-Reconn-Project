@@ -415,6 +415,18 @@ WPA Handshake: XX:XX:XX:XX:XX:XX
 
 Capturing the four-way WPA handshake is the prerequisite for offline passphrase cracking. Once the handshake is stored in a capture file, an attacker can attempt dictionary or brute-force attacks against it using tools such as \texttt{aircrack-ng} or \texttt{hashcat} without any further interaction with the target network. The risk to the network owner is therefore not limited to the moment of capture — a weak passphrase can be recovered long after the event. The collected information could potentially be used for unauthorised network access, password cracking, traffic monitoring, device tracking, and denial-of-service attacks.
 
+\subsection{Passphrase Cracking Attempt}
+
+To illustrate the offline cracking phase, \texttt{aircrack-ng} was run against the captured handshake file using the \texttt{rockyou.txt} wordlist, one of the most widely used password dictionaries in security assessments:
+
+\begin{lstlisting}
+aircrack-ng -w /usr/share/wordlists/rockyou.txt capture-01.cap
+\end{lstlisting}
+
+The attack ran for approximately 20 minutes running \textbf{14,344,391} candidate passphrases at a sustained rate of approximately \textbf{11,780 keys per second}. The correct passphrase was \textbf{not found} within the rockyou list.
+
+The failed dictionary attack demonstrates that a strong, non-guessable passphrase is an effective defence against offline dictionary attacks, even when an attacker has successfully captured the four-way handshake. An attacker would need to escalate to larger wordlists, rule-based mutations, or full brute-force — each of which increases the time and computational cost by orders of magnitude.
+
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Summary and Conclusion}
 
