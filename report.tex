@@ -168,6 +168,24 @@ Before starting the Wi-Fi reconnaissance process, several preparations were comp
 
 Initially, I was planning to run the reconnaissance on my MacBook. However, the required functionality was not fully available due to hardware and driver limitations. The built-in Wi-Fi adapter did not support monitor mode and packet injection, which are necessary for \texttt{airodump-ng} and \texttt{aireplay-ng}. Because of this limitation, I used a friend's laptop running Ubuntu, which provided better support for Aircrack-ng and wireless adapter functionality.
 
+\subsection{Background}
+
+\subsubsection{802.11 Wireless Communication}
+
+Wi-Fi devices communicate using the IEEE 802.11 family of standards over shared radio frequencies. All frames broadcast over the air are visible to any nearby device operating in \emph{monitor mode}, which allows passive capture without association to any network. 802.11 defines three frame types: management frames (beacons, probe requests, authentication, deauthentication), control frames, and data frames. Management frames in WPA and WPA2 networks are sent in plaintext and carry no authentication, which is the root cause of the deauthentication vulnerability exploited later in this assignment.
+
+\subsubsection{WPA, WPA2, and WPA3}
+
+\textbf{WPA} (Wi-Fi Protected Access, 2003) was introduced as an emergency replacement for the broken WEP standard. It uses the TKIP cipher, which wraps RC4 with per-packet key mixing. TKIP is now considered cryptographically weak and is deprecated.
+
+\textbf{WPA2} (IEEE 802.11i, 2004) replaced TKIP with the AES-based CCMP cipher, which is significantly stronger. Two authentication modes exist: Personal (PSK — a shared passphrase) and Enterprise (802.1X with a RADIUS server). WPA2-Personal is the most common deployment and is the target of offline passphrase-cracking attacks once the four-way handshake is captured.
+
+\textbf{WPA3} (2018) introduced Simultaneous Authentication of Equals (SAE), which replaces the PSK handshake with a Diffie--Hellman-based exchange that provides forward secrecy and is resistant to offline dictionary attacks. WPA3 also mandates Protected Management Frames (PMF/802.11w), preventing the deauthentication attack described in Section~\ref{sec:deauth}.
+
+\subsubsection{The WPA/WPA2 Four-Way Handshake}
+
+When a client associates with a WPA2 network, a four-message exchange derives the session key (PTK) from the PSK and two random nonces supplied by the access point and the client. No plaintext password is transmitted, but the handshake messages include enough material for an attacker to attempt offline dictionary or brute-force attacks: a candidate passphrase is used to recompute the PTK and the MIC (message integrity code), and if the MIC matches the captured value, the passphrase is correct. Capturing this handshake is therefore the primary goal of the targeted capture and deauthentication steps below.
+
 \subsection{Installing Aircrack-ng}
 
 The Aircrack-ng suite was installed on a Linux system using the package manager.
@@ -286,7 +304,7 @@ The scan results illustrate how much a passive observer can learn without authen
 A specific wireless network was selected for deeper packet capture:
 
 \begin{lstlisting}
-sudo airodump-ng -c 6 --bssid XX:XX:XX:XX:XX:XX -w capture wlp2s0mon
+sudo airodump-ng -c 6 --bssid A6:8E:DC:82:EB:7B -w capture wlp2s0mon
 \end{lstlisting}
 
 \begin{itemize}
@@ -339,6 +357,7 @@ Two client devices were observed associated with this access point:
 Locking \texttt{airodump-ng} to a single channel and BSSID concentrates all captured frames on one target, enabling reliable client enumeration and packet accumulation within a very short window. The 1,407 data frames captured in under 40 seconds show that even brief targeted sessions yield enough material for further analysis.
 
 \subsection{Deauthentication Attack}
+\label{sec:deauth}
 
 A deauthentication attack was performed against an isolated private Wi-Fi access point (a personal mobile hotspot) to force connected clients to reconnect and generate WPA handshake packets. The target was selected because it was under personal control and no third-party devices were affected.
 
